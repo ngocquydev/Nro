@@ -1,0 +1,356 @@
+@import "@styles/mixins.module.scss";
+@import "@styles/variables.module.scss";
+
+.header {
+  @include flex_box_custom(space-between, $textCenter, 0);
+  position: relative;
+  padding: 10px;
+  z-index: 999;
+  margin-bottom: 12px;
+  .boxIconMenu {
+    display: none;
+  }
+  .logoContainer {
+    padding: 10px;
+    img {
+      max-height: 70px;
+      height: auto;
+      @media (max-width: 376px) {
+        width: 140px;
+      }
+    }
+  }
+  .boxMenu {
+    .menu {
+      padding: 0;
+      @include flex_box_custom($textCenter, $textCenter, 0);
+      margin: 0;
+      li {
+        list-style: none;
+        position: relative;
+        .subMenu {
+          padding: 0;
+          display: none;
+          position: absolute;
+          top: 150%;
+          left: 0;
+          width: 224px;
+          background-color: #fff;
+          li {
+            a {
+              font-size: 13px !important;
+              font-weight: 400;
+              display: $disPlayBlock;
+              padding: 8px 20px;
+            }
+          }
+        }
+        &:hover {
+          .subMenu {
+            display: $disPlayBlock;
+          }
+        }
+        a {
+          padding: 22px 10px;
+          text-decoration: none;
+          color: #333;
+          text-transform: uppercase;
+          font-weight: 700;
+          &:hover {
+            color: $primary_color;
+          }
+        }
+      }
+    }
+  }
+  .boxLogin {
+    .menu {
+      padding: 0;
+      @include flex_box_custom($textCenter, $textCenter, 0);
+      margin: 0;
+      li {
+        list-style: none;
+        a {
+          padding: 22px 10px;
+          text-decoration: none;
+          color: #333;
+          text-transform: uppercase;
+          font-weight: 700;
+          &:hover {
+            color: $primary_color;
+          }
+        }
+      }
+    }
+  }
+  .containerIcon {
+    position: relative;
+    cursor: pointer;
+    .quantiTy {
+      position: absolute;
+      top: -5px;
+      right: -8px;
+      width: 15px;
+      height: 15px;
+      background: $primary_color;
+      color: white;
+      @include flex_box_custom(center, center, 0);
+      font-weight: bold;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+    .menuChild {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 320px;
+      background: white;
+      border: 1px solid #ddd;
+      display: none;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+    }
+
+    .containerIcon:hover svg {
+      color: $primary_color;
+    }
+    &:hover .menuChild {
+      display: $disPlayBlock;
+    }
+    .listTop {
+      display: flex;
+      gap: 8px;
+      padding-top: 18px;
+      padding-left: 16px;
+    }
+    .containerBottom {
+      padding: 16px;
+      display: flex;
+      gap: 8px;
+    }
+    #hiStory {
+      &:hover {
+        color: $primary_color;
+      }
+    }
+  }
+
+  @media (max-width: 376px) {
+    flex-direction: column;
+    @include flex_box_custom(space-between, start, 0);
+    padding: 0;
+    .containerIcon {
+      margin-right: 12px;
+    }
+    .boxMenu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      z-index: 9999;
+      background-color: #ffffff;
+      overflow: hidden;
+
+      .show {
+        transition:
+          max-height 0.5s ease-in-out,
+          opacity 0.5s ease,
+          visibility 0.5s;
+        max-height: 500px;
+        opacity: 1;
+        box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.3);
+        visibility: visible;
+      }
+
+      .none {
+        transition:
+          max-height 0.35s ease-in-out,
+          opacity 0.35s ease,
+          visibility 0.35s;
+        max-height: 0;
+        opacity: 0;
+        box-shadow: none;
+        visibility: hidden;
+      }
+
+      .menu {
+        width: 100%;
+        display: $disPlayBlock;
+        li {
+          a {
+            padding: 10px;
+            display: $disPlayBlock;
+          }
+          @include subMenuPackage($disPlayBlock);
+        }
+      }
+    }
+
+    .boxLogin {
+      position: absolute;
+      top: 0;
+      right: 10px;
+      margin-top: 3%;
+      @include flex_box_custom(space-between, $textCenter, 0);
+      .boxIconMenu {
+        display: $disPlayBlock;
+      }
+
+      .menu {
+        li {
+          a {
+            display: $disPlayBlock;
+            padding: 10px;
+          }
+        }
+      }
+    }
+  }
+  @media (min-width: 376px) and (max-width: 767px) {
+    flex-direction: column;
+    @include flex_box_custom(space-between, start, 0);
+    .containerIcon {
+      margin-right: 12px;
+    }
+    padding: 0;
+    .boxMenu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      z-index: 9999;
+      background-color: #ffffff;
+      overflow: hidden;
+
+      .show {
+        transition:
+          max-height 0.5s ease-in-out,
+          opacity 0.5s ease,
+          visibility 0.5s;
+        max-height: 500px;
+        opacity: 1;
+        box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.3);
+        visibility: visible;
+      }
+
+      .none {
+        transition:
+          max-height 0.35s ease-in-out,
+          opacity 0.35s ease,
+          visibility 0.35s;
+        max-height: 0;
+        opacity: 0;
+        box-shadow: none;
+        visibility: hidden;
+      }
+
+      .menu {
+        width: 100%;
+        display: $disPlayBlock;
+        li {
+          a {
+            padding: 10px;
+            display: $disPlayBlock;
+          }
+          @include subMenuPackage($disPlayBlock);
+        }
+      }
+    }
+    .boxLogin {
+      position: unset;
+      @include flex_box_custom(space-between, $textCenter, 0);
+      width: 100%;
+      .boxIconMenu {
+        position: absolute;
+        top: 15%;
+        right: 3%;
+        display: $disPlayBlock;
+      }
+      .menu {
+        width: 100%;
+        justify-content: end;
+        li {
+          a {
+            display: $disPlayBlock;
+            padding: 10px;
+          }
+        }
+      }
+    }
+  }
+  @media (min-width: 767px) and (max-width: 1200px) {
+    flex-direction: column;
+    @include flex_box_custom(space-between, start, 0);
+    padding: 0;
+    .containerIcon {
+      margin-right: 12px;
+    }
+    .boxMenu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      z-index: 9999;
+      background-color: #ffffff;
+      overflow: hidden;
+
+      .show {
+        transition:
+          max-height 0.5s ease-in-out,
+          opacity 0.5s ease,
+          visibility 0.5s;
+        max-height: 500px;
+        opacity: 1;
+        box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.3);
+        visibility: visible;
+      }
+
+      .none {
+        transition:
+          max-height 0.35s ease-in-out,
+          opacity 0.35s ease,
+          visibility 0.35s;
+        max-height: 0;
+        opacity: 0;
+        box-shadow: none;
+        visibility: hidden;
+      }
+
+      .menu {
+        width: 100%;
+        display: $disPlayBlock;
+        li {
+          a {
+            padding: 10px;
+            display: $disPlayBlock;
+          }
+          @include subMenuPackage($disPlayBlock);
+        }
+      }
+    }
+
+    .boxLogin {
+      position: absolute;
+      top: 0;
+      right: 10px;
+      margin-top: 3%;
+      display: flex;
+      justify-content: space-between;
+      align-items: $textCenter;
+
+      .boxIconMenu {
+        display: $disPlayBlock;
+      }
+
+      .menu {
+        li {
+          a {
+            display: $disPlayBlock;
+            padding: 10px;
+          }
+        }
+      }
+    }
+  }
+}

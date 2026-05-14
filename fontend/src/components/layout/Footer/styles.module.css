@@ -1,0 +1,27 @@
+.desc {
+    color: #adb5bd;
+    line-height: 1.7;
+    font-size: 14px;
+}
+
+/* Hiện dấu chấm */
+.listWithDot {
+    list-style: disc;
+    padding-left: 20px;
+}
+
+/* Màu dấu chấm */
+.listWithDot li::marker {
+    color: #ffc107;
+}
+
+/* Link */
+.footerLink {
+    color: #adb5bd;
+    transition: 0.3s;
+}
+
+.footerLink:hover {
+    color: #ffc107;
+    padding-left: 6px;
+}

@@ -1,0 +1,9 @@
+.listMenu1 li {
+    list-style-image: url('../../assets/images/star.png');
+}
+.listMenu1 li strong {
+    color: blue;
+}
+.listMenu2 {
+    list-style-image: url('../../assets/images/check.png');
+}

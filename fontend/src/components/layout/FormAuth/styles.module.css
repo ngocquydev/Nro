@@ -1,0 +1,106 @@
+.textNoAccount {
+    position: relative;
+    text-transform: uppercase;
+    background: #fff;
+    display: inline-block;
+    padding: 0 15px; /* tạo khoảng cách che line */
+    z-index: 2;
+}
+
+.textNoAccount::before,
+.textNoAccount::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 50%;
+    height: 2px;
+    background-color: #ccc;
+    z-index: 1;
+}
+
+.textNoAccount::before {
+    left: -80%;
+}
+
+.textNoAccount::after {
+    right: -80%;
+}
+.btnDangNhap {
+    width: 100%;
+    padding: 12px;
+    position: relative;
+    overflow: hidden;
+    background-color: red;
+    border: 1px solid red;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hai nửa nền đỏ */
+.btnDangNhap::before,
+.btnDangNhap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background-color: red;
+    transition: transform 0.5s ease;
+    z-index: 1;
+}
+
+.btnDangNhap::before {
+    left: 0;
+    transform-origin: left;
+}
+
+.btnDangNhap::after {
+    right: 0;
+    transform-origin: right;
+}
+
+/* Hover tách nền */
+.btnDangNhap:hover::before,
+.btnDangNhap:hover::after {
+    transform: scaleX(0);
+}
+
+/* Nội dung button */
+.btnDangNhap span {
+    position: relative;
+    z-index: 2;
+    color: white;
+    transition: color 0.5s ease;
+}
+
+/* Spinner nổi lên trên */
+.spinner-white {
+    position: relative;
+    z-index: 2;
+    border-color: white;
+    border-right-color: transparent;
+}
+
+/* Hover chữ đỏ */
+.btnDangNhap:hover span {
+    color: red;
+}
+
+/* Hover nền trắng */
+.btnDangNhap:hover {
+    background-color: white;
+}
+#passwordForm {
+    position: relative;
+}
+#iconEye {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+    cursor: pointer;
+    height: 100%;
+}

@@ -1,0 +1,53 @@
+@import '@styles/mixins.module.scss';
+@import '@styles/variables.module.scss';
+.containerCard {
+    .boxImg {
+        overflow: hidden;
+        img {
+            width: 100%;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+    }
+    .boxContent {
+        padding: 12px;
+        h5 {
+            line-height: 30px;
+            margin-bottom: 15px;
+            a {
+                text-decoration: none;
+                color: #000;
+                font-weight: bold;
+                font-style: 48px;
+                &:hover {
+                    color: $primary_color;
+                }
+            }
+        }
+        .metaContainer {
+            padding: 0;
+            @include flex_box_custom(start, center, 8px);
+            li {
+                list-style-type: none;
+                &:hover {
+                    color: $primary_color;
+                    cursor: pointer;
+                }
+                svg {
+                    font-size: 18px;
+                }
+            }
+        }
+        .desc {
+            line-height: 1.6;
+            opacity: 0.7;
+        }
+    }
+    &:hover {
+        .boxImg {
+            img {
+                transform: scale(1.1);
+            }
+        }
+    }
+}

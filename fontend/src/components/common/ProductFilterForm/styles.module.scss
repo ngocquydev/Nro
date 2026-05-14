@@ -1,0 +1,16 @@
+.selectBox {
+  // Các style cũ của bạn...
+
+  &:focus {
+    border-color: #80bdff !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+.inputText {
+  &:focus {
+    border-color: #80bdff !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}

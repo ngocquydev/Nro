@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      // Đưa các cái chi tiết lên đầu
+      "@common/*": ["src/ui/components/common/*"],
+      "@styles/*": ["src/_styles/*"],
+      "@components/*": ["src/components/*"],
+      "@images/*": ["src/assets/Images/*"],
+      "@contexts/*": ["src/contexts/*"],
+      "@page/*": ["src/page/*"],
+      "@contans/*": ["src/contans/*"],
+      "@config/*": ["src/config/*"],
+      "@util": ["src/util"],
+      // Để cái chung nhất xuống cuối cùng
+      "@/*": ["src/*"]
+    }
+  }
+}

@@ -1,0 +1,71 @@
+@import '@styles/mixins.module.scss';
+@import '@styles/variables.module.scss';
+.btnBuy {
+    width: 142px;
+    height: 45px;
+    background-color: #fff;
+    text-decoration: none;
+    @include flex_box_custom(center, center, 0px);
+    @include radius_common(25px);
+    position: relative;
+    overflow: hidden;
+}
+
+/* chữ */
+.btnBuy span {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    transition: 0.3s;
+}
+
+/* 2 lớp đỏ */
+.btnBuy::before,
+.btnBuy::after {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    transition: transform 0.5s ease;
+    z-index: 1;
+}
+.bgTrue {
+    border: 1px solid $primary_color;
+}
+.bgFalse {
+    border: 1px solid #333;
+}
+.bgTrue::before,
+.bgTrue::after {
+    background-color: $primary_color;
+}
+
+.bgFalse::before,
+.bgFalse::after {
+    background-color: $seconddary_color;
+}
+
+/* trái */
+.btnBuy::before {
+    left: 0;
+}
+
+/* phải */
+.btnBuy::after {
+    right: 0;
+}
+
+/* hover tản ra */
+.btnBuy:hover::before {
+    transform: translateX(-100%);
+}
+
+.btnBuy:hover::after {
+    transform: translateX(100%);
+}
+.bgTrue:hover span {
+    color: $primary_color;
+}
+.bgFalse:hover span {
+    color: $seconddary_color;
+}

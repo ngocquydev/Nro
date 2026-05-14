@@ -1,0 +1,58 @@
+$primary: #3498db;
+$primary-dark: #2980b9;
+$white: #ffffff;
+$black: #222222;
+$gray-4: #f4f4f4;
+$dark-3: #555555;
+$shadow-2: 0px 4px 10px rgba(0, 0, 0, 0.05);
+$shadow-4: 0px 8px 20px rgba(0, 0, 0, 0.1);
+
+.error_One {
+  .error_Content {
+    padding-top: 120px;
+    padding-bottom: 120px;
+
+    .error_404 {
+      font-size: 98px;
+      font-weight: 600;
+      color: $black;
+      line-height: 90px;
+      display: block;
+    }
+
+    .sub_Title {
+      font-size: 24px;
+      font-weight: 700;
+      color: $black;
+      margin-top: 16px;
+    }
+
+    .text {
+      font-size: 16px;
+      line-height: 24px;
+      color: $dark-3;
+      margin-top: 8px;
+    }
+
+    .primary_Btn {
+      background: $primary;
+      color: $white;
+      box-shadow: $shadow-2;
+      border: none;
+      padding: 10px 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover,
+      &:focus {
+        background: $primary-dark;
+        color: $white;
+        box-shadow: $shadow-4;
+      }
+
+      @media (max-width: 767px) {
+        width: 100%;
+      }
+    }
+  }
+}

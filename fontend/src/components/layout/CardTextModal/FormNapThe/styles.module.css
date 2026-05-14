@@ -1,0 +1,19 @@
+.containerTop {
+    background-color: #ebf5ff !important;
+    padding: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    padding: 24px 12px 48px;
+}
+.containerTop strong {
+    font-size: 14px;
+    color: rgb(255, 0, 0);
+}
+
+.wrapPer {
+    width: 540px;
+    margin: 0 auto 60px;
+}
+#formNapCard {
+    padding: 25px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}

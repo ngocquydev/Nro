@@ -1,0 +1,35 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Hàm bổ trợ để kiểm tra xem user có phải là admin không
+    function isAdmin() {
+      return request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin";
+    }
+
+    // Quy tắc cho Collection 'users'
+    match /users/{userId} {
+      // Cho phép đọc thông tin cá nhân hoặc admin được xem tất cả
+      allow read: if request.auth != null && (request.auth.uid == userId || isAdmin());
+
+      // KHÔNG cho phép tự tạo document (tránh việc user tự set role="admin" khi đăng ký)
+      // Việc tạo user nên được thực hiện qua Cloud Functions hoặc admin manually
+      allow create: if false; 
+
+      // Quan trọng: Cho phép sửa thông tin nhưng KHÔNG được sửa field 'role'
+      allow update: if request.auth.uid == userId 
+                    && request.resource.data.role == resource.data.role;
+
+      // Chỉ admin thực sự mới có quyền xóa hoặc đổi role của người khác
+      allow delete, update: if isAdmin();
+    }
+
+    // Quy tắc cho các Collection khác (Ví dụ: Sản phẩm)
+    match /products/{productId} {
+      allow read: if true; // Ai cũng xem được
+      allow write: if isAdmin(); // Chỉ admin mới được thêm/sửa/xóa
+    }
+  }
+}

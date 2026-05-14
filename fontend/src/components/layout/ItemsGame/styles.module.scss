@@ -1,0 +1,63 @@
+@import "@styles/mixins.module.scss";
+@import "@styles/variables.module.scss";
+$widthBtn: 106px;
+.container {
+  border: 1px solid $primary_color;
+  padding-bottom: 12px;
+  @include radius_common(8px);
+  .boxImg {
+    position: relative;
+    img {
+      width: 100%;
+      @include radius_common(8px);
+    }
+    .idItem {
+      position: absolute;
+      top: 10px;
+      right: -5px;
+      background-color: rgb(31, 91, 133);
+      color: #fff;
+      padding: 3px 6px;
+    }
+    .containerBtn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, 100%);
+      opacity: 0;
+      transition: all 0.6s ease;
+      overflow: hidden;
+      @include flex_box_custom(center, center, 10px);
+      .boxBtn {
+        width: $widthBtn;
+        a {
+          height: 34px;
+          span {
+            font-size: 14px;
+          }
+        }
+        button {
+          width: $widthBtn;
+          height: 34px;
+          @include radius_common(25px);
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  .boxContent {
+    padding: 12px;
+  }
+  &:hover {
+    .containerBtn {
+      opacity: 1;
+      overflow: visible;
+      transform: translate(-50%, -50%);
+    }
+    .boxImg {
+      img {
+        filter: brightness(0.8);
+      }
+    }
+  }
+}
