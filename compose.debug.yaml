@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  # --- CẤU HÌNH BACKEND (Giữ nguyên phần Debug của bạn) ---
+  backend:
+    image: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    command: ["node", "--inspect=0.0.0.0:9229", "index.js"]
+    volumes:
+      - ./backend:/app
+
+  # --- GỘP THÊM FRONTEND VÀO ĐÂY ---
+  frontend:
+    image: frontend
+    build:
+      context: ./fontend # Nhớ là 'fontend' theo đúng tên thư mục của bạn
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+    ports:
+      - "3001:3000" # Máy thật dùng 3001 để không trùng với Backend
+    volumes:
+      - ./fontend:/app # Để sửa code là Docker cập nhật ngay
+    stdin_open: true # Giữ cho React không bị tự tắt
+    tty: true
+    depends_on:
+      - backend # Chạy Backend xong mới chạy Frontend
