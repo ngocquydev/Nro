@@ -5,9 +5,16 @@ import path from "path";
 export default defineConfig({
   plugins: [react()],
   server: {
-    headers: {
-      "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
-      "Cross-Origin-Embedder-Policy": "unsafe-none",
+    host: "0.0.0.0",
+    port: 5173,
+    allowedHosts: "all",
+    // CẤU HÌNH PROXY TẠI ĐÂY
+    proxy: {
+      "/api": {
+        target: "http://backend:3000", // Gọi đến service 'backend' trong docker-compose
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
   resolve: {

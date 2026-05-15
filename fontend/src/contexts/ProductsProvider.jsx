@@ -80,7 +80,7 @@ export const ProductsProvider = ({ children }) => {
   ];
   const dataByServer = [
     {
-      value: "0",
+      value: "all",
       content: "Lọc theo server",
     },
     {
@@ -142,7 +142,7 @@ export const ProductsProvider = ({ children }) => {
       content: "Namec",
     },
     {
-      value: "3",
+      value: "Xayda",
       content: "Xayda",
     },
   ];
@@ -170,7 +170,7 @@ export const ProductsProvider = ({ children }) => {
       sortByPlaned: "",
       sortByServer: "",
     });
-  }, [location.pathname]);
+  }, []);
 
   useEffect(() => {
     if (!query.slug) return;

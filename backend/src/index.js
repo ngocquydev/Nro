@@ -22,9 +22,13 @@ try {
 connectDB();
 
 const app = express();
-
+app.set("trust proxy", 1);
 // Middleware
 app.use(cors());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Private-Network", "true");
+  next();
+});
 app.use(cookieParser());
 app.use(express.json());
 

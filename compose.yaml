@@ -1,6 +1,12 @@
 services:
   backend:
     build: ./backend
+    # Chuyển resources vào trong deploy
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "150M"
     ports:
       - "3000:3000"
     environment:
@@ -8,7 +14,7 @@ services:
       - MONGO_URI=mongodb://host.docker.internal:27017/GameNro
     volumes:
       - ./backend:/usr/src/app
-      - /usr/src/app/node_modules # Bảo vệ thư viện bên trong container
+      - /usr/src/app/node_modules
 
   frontend:
     build: ./fontend
