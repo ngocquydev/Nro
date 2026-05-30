@@ -18,7 +18,7 @@ function Products({ titleCategory }) {
     boxHeart,
   } = styles;
   const { products, isLoading } = useContext(ProductsContext);
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = products?.filter((product) => {
     return product.titleCategory === titleCategory;
   });
   return (
@@ -27,7 +27,7 @@ function Products({ titleCategory }) {
         <LoadingCommon loading={isLoading} />
       ) : (
         <Row xs={1} md={4} className="g-4">
-          {filteredProducts.map((it) => {
+          {filteredProducts?.map((it) => {
             return (
               <Col key={it._id}>
                 <div className={containerItem}>

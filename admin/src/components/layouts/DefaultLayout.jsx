@@ -1,24 +1,6 @@
-import React from "react";
-import { Layout } from "antd";
-import HeaderLayout from "./Header/HeaderLayout";
-import ContentLayout from "./Content/ContentLayout";
-import SideBar from "./SideBar/SideBar";
-const layoutStyle = {
-  overflow: "hidden",
-};
-
+import React from 'react';
 function DefaultLayout({ children }) {
-  return (
-    <div>
-      <Layout style={layoutStyle}>
-        <SideBar />
-        <Layout>
-          <HeaderLayout />
-          <ContentLayout />
-        </Layout>
-      </Layout>
-    </div>
-  );
+  return <div>{children}</div>;
 }
 
 export default DefaultLayout;

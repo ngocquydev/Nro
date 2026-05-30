@@ -1,6 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
-dotenv.config();
+dotenv.config({path:'../../'});
 const routes = require("./routes/index");
 const connectDB = require("./config/db");
 const tsrApi = require("./config/axios");

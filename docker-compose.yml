@@ -1,7 +1,6 @@
 services:
   backend:
     build: ./backend
-    # Chuyển resources vào trong deploy
     deploy:
       resources:
         limits:
@@ -19,12 +18,15 @@ services:
   frontend:
     build: ./fontend
     ports:
-      - "3001:5173" # Máy thật vào 3001, bên trong container Vite chạy 5173
+      - "3001:5173" 
+    env_file:
+      - ../.env 
     environment:
       - NODE_ENV=development
     volumes:
       - ./fontend:/usr/src/app
-      - /usr/src/app/node_modules # Bảo vệ thư viện bên trong container
+      - /usr/src/app/node_modules 
+      - ../.env:/usr/src/app/.env 
     stdin_open: true
     tty: true
     command: npm run dev -- --host
