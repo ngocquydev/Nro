@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { CiShop } from 'react-icons/ci';
 import { FaChartBar, FaHandshake, FaRocket } from 'react-icons/fa';
 import { FaArrowUpRightFromSquare } from 'react-icons/fa6';
@@ -6,10 +6,8 @@ import { LuChartNoAxesCombined } from 'react-icons/lu';
 import { MdArrowForwardIos } from 'react-icons/md';
 import menuItems from './constans';
 
-function SideBar() {
-  // Thay đổi: Dùng mảng để chứa danh sách các ID đang mở
+function SideBar({ isShow }) {
   const [activeItems, setActiveItems] = useState([]);
-
   const handleToggle = (id) => {
     setActiveItems(
       (prev) =>
@@ -18,7 +16,13 @@ function SideBar() {
           : [...prev, id] // Nếu chưa mở thì thêm vào danh sách
     );
   };
-
+  const renderMenuChild = (type) => {
+    const overviewItem = menuItems.find((it) => it.id === type);
+    return overviewItem.subMenu;
+  };
+  const totalArrSubMenu = useMemo(() => {
+    return menuItems?.flatMap((it) => it.subMenu || []) || [];
+  }, [menuItems]);
   return (
     <div className="flex h-screen flex-col bg-stone-950 p-3">
       {/* Sidebar Header */}
@@ -41,81 +45,77 @@ function SideBar() {
             </svg>
           </div>
         </div>
-        <div className="w-60">
-          <div className="text-lg font-bold text-white">Apex</div>
-          <div className="text-sm text-stone-400 uppercase">Dashboard</div>
+        <div
+          className={`overflow-hidden transition-all duration-300 ${isShow ? 'w-full opacity-100' : 'w-0 opacity-0'}`}
+        >
+          <div className="text-lg font-bold whitespace-nowrap text-white">Apex</div>
+          <div className="text-sm whitespace-nowrap text-stone-400 uppercase">Dashboard</div>
         </div>
       </div>
 
       {/* Sidebar Content */}
-      <article className="no-scrollbar flex-1 overflow-y-auto">
-        {menuItems.map((item) => (
-          <div key={item.id} className="mb-2">
-            <div
-              className="flex cursor-pointer items-center justify-between py-2 text-stone-400 transition-colors hover:text-white"
-              onClick={() => handleToggle(item.id)}
-            >
-              <div className="text-sm font-medium">{item.title}</div>
-              <MdArrowForwardIos
-                className={`transition-transform duration-300 ${activeItems.includes(item.id) ? 'rotate-90' : ''}`}
-                size={12}
-              />
-            </div>
-
-            <div
-              className={`grid transition-all duration-300 ease-in-out ${
-                activeItems.includes(item.id)
-                  ? 'grid-rows-[1fr] opacity-100'
-                  : 'grid-rows-[0fr] opacity-0'
-              }`}
-            >
-              <div className="min-h-0 overflow-hidden">
-                <ul className="mt-1 space-y-3 pb-2 pl-2 text-stone-500">
-                  <li>
-                    <a href="#" className="flex items-center gap-2 hover:text-amber-500">
-                      <FaChartBar /> Analytics
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="flex items-center gap-2 hover:text-amber-500">
-                      <CiShop /> eCommerce
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="flex items-center gap-2 hover:text-amber-500">
-                      <FaHandshake /> CRM
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="flex items-center gap-2 hover:text-amber-500">
-                      <FaRocket /> SaaS
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="flex items-center gap-2 hover:text-amber-500">
-                      <LuChartNoAxesCombined /> Charts
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+      <article className="no-scrollbar ms-3 flex-1 overflow-y-auto">
+        {!isShow ? (
+          <div className="ms-3.5">
+            {totalArrSubMenu.map((it) => {
+              return <div className="my-2 text-2xl text-white">{it.icon}</div>;
+            })}
           </div>
-        ))}
+        ) : (
+          <div>
+            {menuItems.map((item) => (
+              <div key={item.id} className="mb-2">
+                <div
+                  className="flex cursor-pointer items-center justify-between py-2 text-stone-400 transition-colors hover:text-white"
+                  onClick={() => handleToggle(item.id)}
+                >
+                  <div className="text-sm font-medium">{item.title}</div>
+                </div>
+
+                <div
+                  className={`grid transition-all duration-300 ease-in-out ${
+                    activeItems.includes(item.id)
+                      ? 'grid-rows-[1fr] opacity-100'
+                      : 'grid-rows-[0fr] opacity-0'
+                  }`}
+                >
+                  <div className="min-h-0 overflow-hidden">
+                    <ul className="mt-1 space-y-3 pb-2 pl-2 text-stone-500">
+                      {renderMenuChild(item.id)?.map((itMenuChild) => {
+                        return (
+                          <li key={itMenuChild.title}>
+                            <a href="#" className="flex items-center gap-2 hover:text-amber-500">
+                              {itMenuChild.icon} {itMenuChild.title}
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </article>
 
       {/* Sidebar Footer */}
       <div className="flex h-20 items-center border-t border-stone-800">
         <div className="flex w-20 items-center justify-center">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-800 text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-800 text-white">
             A
           </div>
         </div>
-        <div className="flex w-60 items-center justify-between pr-2">
-          <div>
+        <div
+          className={`flex items-center justify-between overflow-hidden transition-all duration-300 ${isShow ? 'w-full opacity-100' : 'w-0 opacity-0'}`}
+        >
+          <div className="whitespace-nowrap">
             <div className="font-bold text-white">Aigars S.</div>
             <div className="text-xs text-stone-400 uppercase">Admin</div>
           </div>
-          <FaArrowUpRightFromSquare className="cursor-pointer text-stone-400 hover:text-white" />
+          <a href="/login?admin" className="pr-4">
+            <FaArrowUpRightFromSquare className="cursor-pointer text-stone-400 hover:text-white" />
+          </a>
         </div>
       </div>
     </div>
