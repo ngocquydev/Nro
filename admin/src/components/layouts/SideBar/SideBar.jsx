@@ -1,28 +1,31 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { CiShop } from 'react-icons/ci';
 import { FaChartBar, FaHandshake, FaRocket } from 'react-icons/fa';
 import { FaArrowUpRightFromSquare } from 'react-icons/fa6';
 import { LuChartNoAxesCombined } from 'react-icons/lu';
 import { MdArrowForwardIos } from 'react-icons/md';
-import menuItems from './constans';
+import menuItems from './constans'; // Sửa nhẹ typo 'constans' nếu cần thiết ở file gốc của bạn
+import { Link, useLocation } from 'react-router-dom';
+import routers from '@routers/routers';
+import useActiveRoute from '@hook/useActiveRoute';
 
-function SideBar({ isShow }) {
-  const [activeItems, setActiveItems] = useState([]);
+function SideBar({ isShowSideBar }) {
+  const [activeItems, setActiveItems] = useState(() => menuItems.map((item) => item.id));
+
   const handleToggle = (id) => {
-    setActiveItems(
-      (prev) =>
-        prev.includes(id)
-          ? prev.filter((item) => item !== id) // Nếu đã mở thì đóng
-          : [...prev, id] // Nếu chưa mở thì thêm vào danh sách
+    setActiveItems((prev) =>
+      prev.includes(id)
+        ? prev.filter((item) => item !== id) // Nếu đang mở -> đóng (xóa khỏi mảng)
+        : [...prev, id]
     );
   };
-  const renderMenuChild = (type) => {
-    const overviewItem = menuItems.find((it) => it.id === type);
-    return overviewItem.subMenu;
-  };
+
   const totalArrSubMenu = useMemo(() => {
     return menuItems?.flatMap((it) => it.subMenu || []) || [];
   }, [menuItems]);
+
+  const { pathname } = useActiveRoute(routers);
+
   return (
     <div className="flex h-screen flex-col bg-stone-950 p-3">
       {/* Sidebar Header */}
@@ -46,7 +49,7 @@ function SideBar({ isShow }) {
           </div>
         </div>
         <div
-          className={`overflow-hidden transition-all duration-300 ${isShow ? 'w-full opacity-100' : 'w-0 opacity-0'}`}
+          className={`overflow-hidden transition-all duration-300 ${isShowSideBar ? 'w-full opacity-100' : 'w-0 opacity-0'}`}
         >
           <div className="text-lg font-bold whitespace-nowrap text-white">Apex</div>
           <div className="text-sm whitespace-nowrap text-stone-400 uppercase">Dashboard</div>
@@ -55,10 +58,14 @@ function SideBar({ isShow }) {
 
       {/* Sidebar Content */}
       <article className="no-scrollbar ms-3 flex-1 overflow-y-auto">
-        {!isShow ? (
+        {!isShowSideBar ? (
           <div className="ms-3.5">
-            {totalArrSubMenu.map((it) => {
-              return <div className="my-2 text-2xl text-white">{it.icon}</div>;
+            {totalArrSubMenu.map((it, index) => {
+              return (
+                <div className="my-2 text-2xl text-white" key={index}>
+                  {it.icon}
+                </div>
+              );
             })}
           </div>
         ) : (
@@ -70,6 +77,13 @@ function SideBar({ isShow }) {
                   onClick={() => handleToggle(item.id)}
                 >
                   <div className="text-sm font-medium">{item.title}</div>
+
+                  {/* CHÈN THÊM ICON ĐỂ UX TỐT HƠN: Quay mũi tên dựa vào trạng thái đóng/mở */}
+                  <MdArrowForwardIos
+                    className={`text-xs transition-transform duration-300 ${
+                      activeItems.includes(item.id) ? 'rotate-90' : 'rotate-0'
+                    }`}
+                  />
                 </div>
 
                 <div
@@ -81,12 +95,17 @@ function SideBar({ isShow }) {
                 >
                   <div className="min-h-0 overflow-hidden">
                     <ul className="mt-1 space-y-3 pb-2 pl-2 text-stone-500">
-                      {renderMenuChild(item.id)?.map((itMenuChild) => {
+                      {/* TỐI ƯU nhẹ: Lấy trực tiếp từ item.subMenu */}
+                      {(item.subMenu || []).map((itMenuChild) => {
                         return (
                           <li key={itMenuChild.title}>
-                            <a href="#" className="flex items-center gap-2 hover:text-amber-500">
-                              {itMenuChild.icon} {itMenuChild.title}
-                            </a>
+                            <Link
+                              to={itMenuChild.link}
+                              className={`flex items-center gap-2 hover:text-amber-500 ${pathname === itMenuChild.link ? 'text-amber-500' : ''}`}
+                            >
+                              {itMenuChild.icon}
+                              {itMenuChild.title}
+                            </Link>
                           </li>
                         );
                       })}
@@ -107,7 +126,7 @@ function SideBar({ isShow }) {
           </div>
         </div>
         <div
-          className={`flex items-center justify-between overflow-hidden transition-all duration-300 ${isShow ? 'w-full opacity-100' : 'w-0 opacity-0'}`}
+          className={`flex items-center justify-between overflow-hidden transition-all duration-300 ${isShowSideBar ? 'w-full opacity-100' : 'w-0 opacity-0'}`}
         >
           <div className="whitespace-nowrap">
             <div className="font-bold text-white">Aigars S.</div>

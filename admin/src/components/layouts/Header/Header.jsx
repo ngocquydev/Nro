@@ -1,12 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { CiBellOn, CiSettings } from 'react-icons/ci';
 import { IoMoonOutline, IoSearchOutline } from 'react-icons/io5';
 import { MdOutlinePalette } from 'react-icons/md';
 
 function Header() {
+  const containerRef = useRef(null);
   const [toggle, setToggle] = useState(false);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setToggle(false);
+      }
+    }
+
+    // Lắng nghe sự kiện mousedown
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // Cleanup: xóa sự kiện khi component bị hủy
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between" ref={containerRef}>
       <div className="relative">
         <input
           type="text"

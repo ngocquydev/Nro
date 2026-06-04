@@ -3,23 +3,24 @@ import SideBar from '@components/layouts/SideBar/SideBar';
 import React, { useState } from 'react';
 import { MdOutlineArrowForwardIos } from 'react-icons/md';
 function DefaultLayout({ children }) {
-  const [isShow, setShow] = useState(true);
+  const [isShowSideBar, setShowSideBar] = useState(true);
   return (
     <div
       className={`grid h-screen transition-all duration-300 ease-in-out ${
-        isShow ? 'grid-cols-[300px_1fr]' : 'grid-cols-[100px_1fr]'
+        isShowSideBar ? 'grid-cols-[250px_1fr]' : 'grid-cols-[100px_1fr]'
       }`}
     >
       {/* Sidebar container */}
       <div className="relative h-screen border-r transition-all duration-300 ease-in-out">
-        <SideBar isShow={isShow} />
-
+        <SideBar isShowSideBar={isShowSideBar} />
         {/* Nút Toggle */}
         <div
           className="absolute top-[99px] -right-3 flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-full bg-amber-200 transition-transform duration-300 hover:scale-110"
-          onClick={() => setShow((prev) => !prev)}
+          onClick={() => setShowSideBar((prev) => !prev)}
         >
-          <div className={`transition-transform duration-300 ${!isShow ? 'rotate-180' : ''}`}>
+          <div
+            className={`transition-transform duration-300 ${!isShowSideBar ? 'rotate-180' : ''}`}
+          >
             <MdOutlineArrowForwardIos size={12} />
           </div>
         </div>

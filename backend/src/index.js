@@ -1,6 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
-dotenv.config({path:'../../'});
+dotenv.config({ path: "../../.env" });
 const routes = require("./routes/index");
 const connectDB = require("./config/db");
 const tsrApi = require("./config/axios");
@@ -17,7 +17,7 @@ try {
 } catch (error) {
   console.error("Firebase Admin init error:", error.message);
 }
-
+console.log(process.env.PORT);
 // 4. Kết nối DB
 connectDB();
 

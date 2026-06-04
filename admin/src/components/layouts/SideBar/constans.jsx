@@ -1,15 +1,7 @@
 import { AiOutlineProduct } from 'react-icons/ai';
 import { CgShoppingCart } from 'react-icons/cg';
 import { CiSettings, CiShop } from 'react-icons/ci';
-import {
-  FaBox,
-  FaCartPlus,
-  FaChartBar,
-  FaHandshake,
-  FaRocket,
-  FaStore,
-  FaUserFriends,
-} from 'react-icons/fa';
+import { FaBox, FaChartBar, FaHandshake, FaRocket, FaUserFriends } from 'react-icons/fa';
 import { FiShoppingCart } from 'react-icons/fi';
 import { IoIosNotifications } from 'react-icons/io';
 import { LuChartNoAxesCombined } from 'react-icons/lu';
@@ -30,12 +22,12 @@ const menuItems = [
     id: 'Overview',
     title: 'Overview',
     subMenu: [
-      { id: 'Dashboard', title: 'Dashboard', icon: <AiOutlineProduct /> },
-      { id: 'Analytics', title: 'Analytics', icon: <FaChartBar /> },
-      { id: 'eCommerce', title: 'eCommerce', icon: <CiShop /> },
-      { id: 'CRM', title: 'CRM', icon: <FaHandshake /> },
-      { id: 'SaaS', title: 'SaaS', icon: <FaRocket /> },
-      { id: 'Charts', title: 'Charts', icon: <LuChartNoAxesCombined /> },
+      { id: 'Dashboard', link: '/', title: 'Dashboard', icon: <AiOutlineProduct /> },
+      { id: 'Analytics', link: '/analytics', title: 'Analytics', icon: <FaChartBar /> },
+      { id: 'eCommerce', link: '/ecommerce', title: 'eCommerce', icon: <CiShop /> },
+      { id: 'CRM', link: '/crm', title: 'CRM', icon: <FaHandshake /> },
+      { id: 'SaaS', link: '/saas', title: 'SaaS', icon: <FaRocket /> },
+      { id: 'Charts', link: '/chart', title: 'Charts', icon: <LuChartNoAxesCombined /> },
     ],
   },
   {
@@ -43,7 +35,7 @@ const menuItems = [
     title: 'Commerce',
     subMenu: [
       { id: 'Orders', title: 'Orders', icon: <FiShoppingCart /> },
-      { id: 'Products', title: 'Products', icon: <FaBox /> },
+      { id: 'Products', link: '/products', title: 'Products', icon: <FaBox /> },
       { id: 'Customers', title: 'Customers', icon: <FaUserFriends /> },
       { id: 'Invoices', title: 'Invoices', icon: <TbReport /> },
     ],
