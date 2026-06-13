@@ -2,7 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config({ path: "../../.env" });
 const routes = require("./routes/index");
-const connectDB = require("./config/db");
+const {connectDB} = require("./config/db");
 const tsrApi = require("./config/axios");
 
 const cors = require("cors");
@@ -17,10 +17,8 @@ try {
 } catch (error) {
   console.error("Firebase Admin init error:", error.message);
 }
-console.log(process.env.PORT);
 // 4. Kết nối DB
 connectDB();
-
 const app = express();
 app.set("trust proxy", 1);
 // Middleware
