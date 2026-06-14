@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // 1. Import Link để chặn reload
 import styles from "./styles.module.scss";
 import { Container } from "react-bootstrap";
@@ -9,6 +9,7 @@ import cls from "classnames";
 import { auth } from "@config/firebase";
 import UserSuccess from "./UserSuccess/UserSuccess";
 import MenuHeader from "@components/layout/Header/contans";
+import { AuthContext } from "@contexts/AuthProvider";
 
 function Header() {
   const {
@@ -23,18 +24,23 @@ function Header() {
     subMenu,
     showSubMenu,
     noneSubMenu,
-  } = styles;
-
+  } = styles; 
   const [toggle, setToggle] = useState(false);
   const [hideSubMenu, setHideSubMenu] = useState(null);
   const [user, setUser] = useState(null);
   const handleHideSubMenu = (name) => {
     setHideSubMenu((prev) => (prev === name ? null : name));
   };
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((u) => setUser(u));
-    return () => unsubscribe();
-  }, []);
+useEffect(() => {
+
+  const unsubscribe = auth.onAuthStateChanged((u) => {
+        setUser(u);
+      }
+    )
+  return () => {
+    unsubscribe();
+  };
+}, []);
   return (
     <Container className="p-0">
       <header className={header}>

@@ -1,21 +1,13 @@
-const { MongoClient } = require('mongodb');
-const adminClient = new MongoClient(process.env.DB_URI_ADMIN);
-const gameClient = new MongoClient(process.env.DB_URI_GAME);
+const mongoose = require('mongoose');
 
-let adminDB, gameDB;
-
-async function connectDB() {
+const connectDB = async () => {
     try {
-        await adminClient.connect();
-        await gameClient.connect();
-        
-        adminDB = adminClient.db(process.env.DB_NAME);
-        gameDB = gameClient.db(process.env.DB_NAME);
-        
-        console.log("Đã kết nối Admin và Game DB thành công!");
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log('Kết nối Mongoose thành công!');
     } catch (err) {
-        console.error("Lỗi kết nối DB:", err);
+        console.error('Lỗi Mongoose:', err.message);
+        process.exit(1);
     }
-}
+};
 
-module.exports = { connectDB, adminDB: () => adminDB, gameDB: () => gameDB };
+module.exports = connectDB;

@@ -1,3 +1,4 @@
+import Button from '@components/Button/Button';
 import React, { useEffect, useRef, useState } from 'react';
 import { CiBellOn, CiSettings } from 'react-icons/ci';
 import { IoMoonOutline, IoSearchOutline } from 'react-icons/io5';
@@ -35,12 +36,7 @@ function Header() {
         <ul className="flex items-center justify-between gap-4">
           {/* Nhóm trái */}
           <li>
-            <a
-              href="#"
-              className="block rounded-lg bg-amber-700 px-4 py-2 text-sm font-bold text-white transition hover:bg-amber-600"
-            >
-              + New Order
-            </a>
+            <Button name="+ New Order" bg="bg-emerald-600" bgHover="bg-emerald-700" />
           </li>
 
           {/* Nhóm phải */}

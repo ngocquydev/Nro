@@ -5,4 +5,30 @@ const categories = [
   { id: 'templates', title: 'Templates', count: 6 },
 ];
 const listItem = [{ name: 'All' }, { name: 'Active' }, { name: 'Draft' }, { name: 'Archived' }];
-export { categories, listItem };
+const Columns = [
+  {
+    id: 'ColumsProdcutsName',
+    name: 'Name',
+  },
+  {
+    id: 'ColumsProdcutsCategory',
+    name: 'Category',
+  },
+  {
+    id: 'ColumsProdcutsStatus',
+    name: 'Status',
+  },
+  {
+    id: 'ColumsProdcutsStock',
+    name: 'Stock',
+  },
+  {
+    id: 'ColumsProdcutsPrice',
+    name: 'Price',
+  },
+  {
+    id: 'ColumsProdcutsCreated',
+    name: 'Created',
+  },
+];
+export { categories, listItem, Columns };

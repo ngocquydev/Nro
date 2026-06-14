@@ -1,40 +1,6 @@
 const admin = require("firebase-admin");
 const User = require("../models/UserModel");
 const { adminDB, gameDB } = require("../config/db");
-const dbRoleMiddleware = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(" ")[1];
-
-    if (!token) {
-        return res.status(401).json({ 
-            status: "ERROR", 
-            message: "Truy cập bị từ chối: Không có token!" 
-        });
-    }
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded; 
-        if (req.user.role === 'admin') {
-            req.db = adminDB(); 
-        } else {
-            req.db = gameDB(); 
-        }
-        if (!req.db) {
-            return res.status(500).json({ 
-                status: "ERROR", 
-                message: "Database chưa sẵn sàng!" 
-            });
-        }
-
-        next(); // Chuyển sang route handler
-    } catch (err) {
-        return res.status(403).json({ 
-            status: "ERROR", 
-            message: "Token không hợp lệ hoặc đã hết hạn!" 
-        });
-    }
-};
 
 
 const getAuthenticatedUser = async (token) => {
@@ -129,10 +95,8 @@ const checkIsUser = async (req, res, next) => {
     });
   }
 };
-
 module.exports = {
   authMiddleWare,
   authUserMiddleWare,
   checkIsUser,
-  dbRoleMiddleware
 };

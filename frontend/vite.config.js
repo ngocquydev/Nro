@@ -4,23 +4,11 @@ import path from "path";
 
 export default defineConfig({
   plugins: [react()],
-  envDir:'../../',
-  server: {
-    host: "0.0.0.0",
-    port: 5173,
-    allowedHosts: "all",
-    // CẤU HÌNH PROXY TẠI ĐÂY
-    proxy: {
-      "/api": {
-        target: "http://backend:3000", // Gọi đến service 'backend' trong docker-compose
-        changeOrigin: true,
-        secure: false,
-      },
-    },
-  },
+  envDir: '../',
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
+      // ... (giữ nguyên các alias khác của bạn)
       "@styles": path.resolve(__dirname, "src/_styles"),
       "@images": path.resolve(__dirname, "src/assets/Images"),
       "@contexts": path.resolve(__dirname, "src/contexts"),

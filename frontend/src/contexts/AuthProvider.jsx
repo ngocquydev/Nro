@@ -16,7 +16,7 @@ export const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [loadingUser, setLoadingUser] = useState(false);
-  const [user, setUser] = useState([]);
+  const [userDT, setUserDT] = useState([]);
   const navigate = useNavigate();
   const local = useLocation();
   const authRegisterUser = async ({ username, password, phone }) => {
@@ -85,7 +85,7 @@ export const AuthProvider = ({ children }) => {
 
       const userData = await loginUser(uid);
 
-      setUser(userData.data);
+      setUserDT(userData.data);
       setLoading(false);
       return { success: true };
     } catch (error) {
@@ -162,6 +162,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await signInWithPopup(auth, provider);
       const user = res.user;
+      
       const data = {
         uid: user.uid,
         username: user.displayName,
@@ -187,47 +188,11 @@ export const AuthProvider = ({ children }) => {
       return message;
     }
   };
-  useEffect(() => {
-    setLoadingUser(true);
-
-    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
-      try {
-        if (currentUser) {
-          const res = await loginUser(currentUser.uid);
-          setUser(res.data);
-        } else {
-          setUser(null);
-
-          // CHỈ ĐIỀU HƯỚNG KHI XÁC NHẬN KHÔNG CÓ USER
-          const protectedRoutes = [
-            "/member",
-            "/member/password",
-            "/member/balance-history",
-            "/member/transaction",
-            "/member/purchase",
-            "/nap-card",
-            "/nap-atm",
-          ];
-
-          if (protectedRoutes.includes(local.pathname)) {
-            navigate("/login");
-          }
-        }
-      } catch (error) {
-        console.error("Lỗi backend:", error);
-        setUser(null);
-      } finally {
-        setLoadingUser(false);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [navigate]);
   const value = {
     authRegisterUser,
     loading,
     authLogin,
-    user,
+    userDT,
     loadingUser,
     handleLoginGoogle,
     handleLoginFB,
