@@ -33,16 +33,30 @@ const Columns = [
 ];
 const dataRouter = [
   {
-    path: '/pack-nick-ngoc-rong-vip.html',
+    label: 'Chọn thể loại',
   },
   {
-    path: '/pack-nick-so-sinh-ngon',
+    label: '/pack-nick-ngoc-rong-vip.html',
   },
   {
-    path: '/pack-ban-nick-lien-quan-lienquangiare',
+    label: '/pack-nick-so-sinh-ngon',
   },
   {
-    path: '/pack-acc-reg-lienquangiare',
+    label: '/pack-ban-nick-lien-quan-lienquangiare',
+  },
+  {
+    label: '/pack-acc-reg-lienquangiare',
   },
 ];
-export { categories, listItem, Columns, dataRouter };
+const status = [
+  {
+    label: 'Chọn trạng thái',
+  },
+  {
+    label: 'còn',
+  },
+  {
+    label: 'hết',
+  },
+];
+export { categories, listItem, Columns, dataRouter, status };

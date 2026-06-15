@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import Breadcrumb from '@components/Breadcrumb/Breadcrumb';
 import Button from '@components/Button/Button';
 import SelectInput from './components/SelectInput/SelectInput';
-import { dataRouter } from './contans/contans';
+import { dataRouter, status } from './contans/contans';
 function CreateProducts() {
   return (
     <div className="min-h-screen bg-slate-50 p-6 md:p-10">
@@ -20,12 +20,27 @@ function CreateProducts() {
               <p className="mb-6 text-sm text-gray-500">
                 Enter the basic details for the new product.
               </p>
+              <div className="mb-4 space-y-4">
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium text-gray-700" htmlFor="productName">
+                    Product Name
+                  </label>
+                  <input
+                    type="text"
+                    id="productName"
+                    className="w-full rounded-md border border-gray-300 p-2.5 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                    placeholder="Enter product name"
+                  />
+                </div>
+              </div>
 
               <div className="space-y-4">
-                <SelectInput data={dataRouter} />
                 <div className="flex flex-col gap-1">
-                  <label className="text-sm font-medium text-gray-700">Description</label>
+                  <label className="text-sm font-medium text-gray-700" htmlFor="productDescription">
+                    Description
+                  </label>
                   <textarea
+                    id="productDescription"
                     rows="3"
                     className="w-full rounded-md border border-gray-300 p-2.5 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                   />
@@ -33,17 +48,23 @@ function CreateProducts() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1">
-                    <label className="text-sm font-medium text-gray-700">Price</label>
+                    <label className="text-sm font-medium text-gray-700" htmlFor="productPrice">
+                      Price
+                    </label>
                     <input
                       type="number"
+                      id="productPrice"
                       placeholder="0.00"
                       className="w-full rounded-md border border-gray-300 p-2.5 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
-                    <label className="text-sm font-medium text-gray-700">Stock</label>
+                    <label className="text-sm font-medium text-gray-700" htmlFor="productStock">
+                      Stock
+                    </label>
                     <input
                       type="number"
+                      id="productStock"
                       placeholder="0"
                       className="w-full rounded-md border border-gray-300 p-2.5 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                     />
@@ -56,7 +77,8 @@ function CreateProducts() {
             <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
               <h2 className="mb-4 text-lg font-bold text-gray-800">Organization</h2>
               <div className="space-y-4">
-                <SelectInput />
+                <SelectInput data={dataRouter} />
+                <SelectInput data={status} />
               </div>
             </div>
 

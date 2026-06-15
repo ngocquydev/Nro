@@ -1,9 +1,8 @@
-const ProductService = require("../services/ProductService");
+const ProductService = require('../services/ProductService');
 
 const createProduct = async (req, res) => {
   try {
-    const { id, planed, server, accountType, card, atm, img, category, slug } =
-      req.body;
+    const { id, planed, server, accountType, card, atm, img, category, slug } = req.body;
 
     if (
       id === undefined ||
@@ -18,41 +17,32 @@ const createProduct = async (req, res) => {
       !slug
     ) {
       return res.status(400).json({
-        status: "ERR",
-        message:
-          "Cần nhập đầy đủ: id, planed, server, accountType, card, atm, img, category, slug",
+        status: 'ERR',
+        message: 'Cần nhập đầy đủ: id, planed, server, accountType, card, atm, img, category, slug',
       });
     }
 
     const response = await ProductService.createProduct(req.body);
 
-    if (response.status === "OK") {
+    if (response.status === 'OK') {
       return res.status(201).json(response);
     } else {
       return res.status(400).json(response);
     }
   } catch (e) {
     return res.status(500).json({
-      status: "ERR",
-      message: e.message || "Lỗi hệ thống",
+      status: 'ERR',
+      message: e.message || 'Lỗi hệ thống',
     });
   }
 };
 const getProductsBySlug = async (req, res) => {
   try {
-    const {
-      slug,
-      page,
-      limit,
-      sortByPrice,
-      searchById,
-      sortByPlaned,
-      sortByServer,
-    } = req.query;
+    const { slug, page, limit, sortByPrice, searchById, sortByPlaned, sortByServer } = req.query;
     if (!slug) {
       return res.status(400).json({
-        status: "ERR",
-        message: "Thiếu tham số slug trên URL",
+        status: 'ERR',
+        message: 'Thiếu tham số slug trên URL',
       });
     }
     const response = await ProductService.getProductsBySlug(
@@ -62,13 +52,13 @@ const getProductsBySlug = async (req, res) => {
       sortByPrice,
       searchById,
       sortByPlaned,
-      sortByServer,
+      sortByServer
     );
     return res.status(200).json(response);
   } catch (error) {
     return res.status(500).json({
-      status: "ERR",
-      message: e.message || "Lỗi hệ thống",
+      status: 'ERR',
+      message: e.message || 'Lỗi hệ thống',
     });
   }
 };
@@ -78,13 +68,13 @@ const deleteProduct = async (req, res) => {
     const result = ProductService.deleteProductById(id);
     if (!result) {
       return res.status(404).json({
-        status: "ERROR",
-        message: "Không tìm thấy sản phẩm với ID này để xóa!",
+        status: 'ERROR',
+        message: 'Không tìm thấy sản phẩm với ID này để xóa!',
       });
     }
     return res.status(200).json({
-      status: "OK",
-      message: "Xóa sản phẩm thành công!",
+      status: 'OK',
+      message: 'Xóa sản phẩm thành công!',
       data: {
         id: result._id,
         name: result.name,
@@ -92,7 +82,7 @@ const deleteProduct = async (req, res) => {
     });
   } catch (err) {
     return res.status(500).json({
-      status: "SERVER_ERROR",
+      status: 'SERVER_ERROR',
       message: err.message,
     });
   }
@@ -102,15 +92,15 @@ const createDetail = async (req, res) => {
     const { desc, images, productId } = req.body;
     if (!productId) {
       return res.status(400).json({
-        status: "ERROR",
-        message: "Id đã tồn tại",
+        status: 'ERROR',
+        message: 'Id đã tồn tại',
       });
     }
 
     if (!desc || !images || !Array.isArray(images)) {
       return res.status(400).json({
-        status: "ERROR",
-        message: "Mô tả và danh sách hình ảnh không hợp lệ!",
+        status: 'ERROR',
+        message: 'Mô tả và danh sách hình ảnh không hợp lệ!',
       });
     }
 
@@ -120,12 +110,12 @@ const createDetail = async (req, res) => {
     });
 
     return res.status(201).json({
-      status: "OK",
+      status: 'OK',
       data: newDetail,
     });
   } catch (error) {
     return res.status(500).json({
-      status: "SERVER_ERROR",
+      status: 'SERVER_ERROR',
       message: error.message,
     });
   }
@@ -135,15 +125,13 @@ const getDetails = async (req, res) => {
     const { productId } = req.query;
 
     if (!productId) {
-      return res
-        .status(400)
-        .json({ message: "Thiếu tham số productId trên Query String!" });
+      return res.status(400).json({ message: 'Thiếu tham số productId trên Query String!' });
     }
 
     const detail = await ProductService.getDetailByProductId(productId);
 
     if (!detail) {
-      return res.status(404).json({ message: "Không tìm thấy chi tiết." });
+      return res.status(404).json({ message: 'Không tìm thấy chi tiết.' });
     }
 
     return res.status(200).json({

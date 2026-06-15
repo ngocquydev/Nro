@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 
 function SelectInput({ data }) {
-  const [selected, setSelected] = useState('Chọn thể loại');
+  const [selected, setSelected] = useState(data[0]?.label || '');
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -24,7 +24,9 @@ function SelectInput({ data }) {
         className="flex w-full items-center justify-between rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-700 transition outline-none hover:bg-gray-50 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
       >
         {selected}
-        <FaChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <FaChevronDown
+          className={`h-4 w-4 opacity-50 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+        />
       </button>
 
       {isOpen && (
@@ -35,12 +37,12 @@ function SelectInput({ data }) {
                 <button
                   type="button"
                   onClick={() => {
-                    setSelected(item.path);
+                    setSelected(item.label);
                     setIsOpen(false);
                   }}
                   className="w-full rounded-md p-2 text-left hover:bg-gray-100"
                 >
-                  {item.path}
+                  {item.label}
                 </button>
               </li>
             ))}
