@@ -31,4 +31,18 @@ const Columns = [
     name: 'Created',
   },
 ];
-export { categories, listItem, Columns };
+const dataRouter = [
+  {
+    path: '/pack-nick-ngoc-rong-vip.html',
+  },
+  {
+    path: '/pack-nick-so-sinh-ngon',
+  },
+  {
+    path: '/pack-ban-nick-lien-quan-lienquangiare',
+  },
+  {
+    path: '/pack-acc-reg-lienquangiare',
+  },
+];
+export { categories, listItem, Columns, dataRouter };
