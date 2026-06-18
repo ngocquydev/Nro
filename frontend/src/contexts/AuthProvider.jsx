@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from 'react';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -8,28 +8,22 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
   updatePassword,
-} from "firebase/auth";
-import { loginUser, registerUser } from "@config/api/user/user";
-import { auth } from "@config/firebase";
-import { useLocation, useNavigate } from "react-router-dom";
+} from 'firebase/auth';
+import { getUser, loginUser, registerUser } from '@config/api/user/user';
+import { auth } from '@config/firebase';
+import { useLocation, useNavigate } from 'react-router-dom';
 export const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [loadingUser, setLoadingUser] = useState(false);
   const [userDT, setUserDT] = useState([]);
-  const navigate = useNavigate();
-  const local = useLocation();
   const authRegisterUser = async ({ username, password, phone }) => {
     setLoading(true);
     let firebaseUser = null;
     try {
       const email = `${username}@mt.com`;
 
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       firebaseUser = userCredential.user;
 
       const data = {
@@ -37,35 +31,35 @@ export const AuthProvider = ({ children }) => {
         username: username,
         email: email,
         phone: phone,
-        role: "user",
+        role: 'user',
       };
 
       const res = await registerUser(data);
 
-      if (res.status === "ERR") {
-        throw new Error(res.message || "Lỗi lưu dữ liệu tại Backend");
+      if (res.status === 'ERR') {
+        throw new Error(res.message || 'Lỗi lưu dữ liệu tại Backend');
       }
       setLoading(false);
       return { success: true };
     } catch (error) {
-      console.error("Lỗi đăng ký:", error);
+      console.error('Lỗi đăng ký:', error);
 
       if (firebaseUser) {
         try {
           await firebaseUser.delete();
-          console.log("Đã xóa user tạm thời trên Firebase do lỗi Backend.");
+          console.log('Đã xóa user tạm thời trên Firebase do lỗi Backend.');
         } catch (deleteError) {
-          console.error("Không thể xóa user sau lỗi BE:", deleteError);
+          console.error('Không thể xóa user sau lỗi BE:', deleteError);
         }
       }
 
       setLoading(false);
 
-      let errorMsg = error.message || "Đã có lỗi xảy ra, vui lòng thử lại.";
-      if (error.code === "auth/email-already-in-use") {
-        errorMsg = "Tài khoản này đã được sử dụng!";
-      } else if (error.code === "auth/weak-password") {
-        errorMsg = "Mật khẩu quá yếu!";
+      let errorMsg = error.message || 'Đã có lỗi xảy ra, vui lòng thử lại.';
+      if (error.code === 'auth/email-already-in-use') {
+        errorMsg = 'Tài khoản này đã được sử dụng!';
+      } else if (error.code === 'auth/weak-password') {
+        errorMsg = 'Mật khẩu quá yếu!';
       }
 
       return { success: false, error: { message: errorMsg } };
@@ -76,11 +70,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const email = `${username}@mt.com`;
 
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const uid = userCredential.user.uid;
 
       const userData = await loginUser(uid);
@@ -89,13 +79,13 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
       return { success: true };
     } catch (error) {
-      console.error("Lỗi trong quá trình đăng nhập:", error);
+      console.error('Lỗi trong quá trình đăng nhập:', error);
 
       let errorMessage = error.message;
-      if (error.code === "auth/invalid-credential") {
-        errorMessage = "Sai tài khoản hoặc mật khẩu!";
+      if (error.code === 'auth/invalid-credential') {
+        errorMessage = 'Sai tài khoản hoặc mật khẩu!';
       } else if (!error.code) {
-        errorMessage = "Lỗi kết nối server backend!";
+        errorMessage = 'Lỗi kết nối server backend!';
       }
 
       setLoading(false);
@@ -104,30 +94,27 @@ export const AuthProvider = ({ children }) => {
   };
   const onChangePassword = async (oldPassword, newPassword) => {
     if (!oldPassword || !newPassword) {
-      console.warn("Thiếu dữ liệu mật khẩu");
+      console.warn('Thiếu dữ liệu mật khẩu');
       return;
     }
     setLoading(true);
     try {
       const currentUser = auth.currentUser;
       if (!currentUser) return;
-      const credential = EmailAuthProvider.credential(
-        currentUser.email,
-        oldPassword,
-      );
+      const credential = EmailAuthProvider.credential(currentUser.email, oldPassword);
       await reauthenticateWithCredential(currentUser, credential);
       await updatePassword(currentUser, newPassword);
       setLoading(false);
       return { success: true };
     } catch (error) {
-      console.error("Lỗi:", error.code, error.message);
+      console.error('Lỗi:', error.code, error.message);
       setLoading(false);
       return { success: false };
     }
   };
   const handleLoginGoogle = async () => {
     const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: "select_account" });
+    provider.setCustomParameters({ prompt: 'select_account' });
 
     try {
       const res = await signInWithPopup(auth, provider);
@@ -136,39 +123,39 @@ export const AuthProvider = ({ children }) => {
         uid: user.uid,
         username: user.displayName,
         email: user.email,
-        phone: user.phoneNumber || "chưa cập nhật",
-        role: "user",
+        phone: user.phoneNumber || 'chưa cập nhật',
+        role: 'user',
       };
       const result = await registerUser(data);
       if (!result) return;
       return true;
     } catch (err) {
-      console.log("Lỗi xảy ra:", err);
+      console.log('Lỗi xảy ra:', err);
       let message;
-      if (err.code === "auth/account-exists-with-different-credential") {
+      if (err.code === 'auth/account-exists-with-different-credential') {
         message =
-          "Email này đã được sử dụng với một phương thức đăng nhập khác (ví dụ: Facebook). Vui lòng dùng đúng phương thức đó!";
+          'Email này đã được sử dụng với một phương thức đăng nhập khác (ví dụ: Facebook). Vui lòng dùng đúng phương thức đó!';
       }
       // Nếu lỗi 403 hoặc 500 từ server, nó sẽ nhảy vào đây
       if (err.response) {
-        console.log("Dữ liệu lỗi từ Server:", err.response.data);
+        console.log('Dữ liệu lỗi từ Server:', err.response.data);
       }
       return message;
     }
   };
   const handleLoginFB = async () => {
     const provider = new FacebookAuthProvider();
-    provider.setCustomParameters({ prompt: "select_account" });
+    provider.setCustomParameters({ prompt: 'select_account' });
     try {
       const res = await signInWithPopup(auth, provider);
       const user = res.user;
-      
+
       const data = {
         uid: user.uid,
         username: user.displayName,
         email: user.email,
-        phone: user.phoneNumber || "chưa cập nhật",
-        role: "user",
+        phone: user.phoneNumber || 'chưa cập nhật',
+        role: 'user',
       };
 
       const result = await registerUser(data);
@@ -177,17 +164,38 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       // Bắt lỗi đóng popup giống như bên Google
       let message;
-      if (err.code === "auth/account-exists-with-different-credential") {
-        message = "Trùng Email với google vui lòng chọn acc facebook khác";
+      if (err.code === 'auth/account-exists-with-different-credential') {
+        message = 'Trùng Email với google vui lòng chọn acc facebook khác';
       }
-      if (err.code === "auth/popup-closed-by-user") {
-        console.log("Người dùng đã hủy đăng nhập Facebook.");
+      if (err.code === 'auth/popup-closed-by-user') {
+        console.log('Người dùng đã hủy đăng nhập Facebook.');
       } else {
-        console.error("Lỗi Facebook Auth:", err.message);
+        console.error('Lỗi Facebook Auth:', err.message);
       }
       return message;
     }
   };
+  useEffect(() => {
+    setLoadingUser(true);
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        getUser(user.uid)
+          .then((res) => {
+            setUserDT(res.data.data);
+            setLoadingUser(false);
+          })
+          .catch((err) => {
+            console.error('Lỗi khi lấy thông tin người dùng:', err);
+            setLoadingUser(false);
+          });
+      } else {
+        setUserDT(null);
+        setLoadingUser(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
   const value = {
     authRegisterUser,
     loading,

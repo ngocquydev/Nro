@@ -1,76 +1,84 @@
-const CategoryService = require("../services/CategoryService");
+const categoryService = require('../services/categoryService');
 
-const createCategory = async (req, res) => {
-  try {
-    const { titleCategory, name, img, desc, slug } = req.body;
-
-    if (!titleCategory || !name || !img || !desc || !slug) {
-      return res.status(200).json({
-        status: "ERR",
-        message: "The input is required (titleCategory, name, img, desc, slug)",
-      });
-    }
-
-    const response = await CategoryService.createCategory(req.body);
-    return res.status(200).json(response);
-  } catch (e) {
-    return res.status(500).json({
-      status: "ERR",
-      message: e.message || e,
-    });
-  }
-};
 const getAllCategory = async (req, res) => {
   try {
-    const response = await CategoryService.getAllCategory();
-    return res.status(200).json(response);
-  } catch (e) {
+    const categories = await categoryService.getAllCategory();
+    return res.status(200).json({
+      success: true,
+      data: categories,
+    });
+  } catch (error) {
     return res.status(500).json({
-      status: "ERR",
-      message: e.message || e,
+      success: false,
+      message: 'Có lỗi xảy ra khi lấy dữ liệu',
+      error: error.message,
     });
   }
 };
-const getCategoryBySlug = async (req, res) => {
+const createCategory = async (req, res) => {
   try {
-    const { slug } = req.params;
-    if (!slug) {
-      return res.status(200).json({
-        status: "ERR",
-        message: "Slug is required",
+    const { name, desc, slug, bgUrl, title } = req.body;
+    if (!name || !desc || !slug || !bgUrl || !title) {
+      return res.status(400).json({
+        success: false,
+        message: 'Vui lòng nhập đầy đủ thông tin',
       });
     }
-    const response = await CategoryService.getCategoryBySlug(slug);
-    return res.status(200).json(response);
-  } catch (e) {
+    const category = await categoryService.createCategory({ name, desc, slug, bgUrl, title });
+    return res.status(201).json({
+      success: true,
+      data: category,
+    });
+  } catch (error) {
     return res.status(500).json({
-      status: "ERR",
-      message: e.message || e,
+      success: false,
+      message: 'Có lỗi xảy ra khi tạo danh mục',
+      error: error.message,
+    });
+  }
+};
+const updateCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, desc, slug, bgUrl, title } = req.body;
+    if (!name || !desc || !slug || !bgUrl || !title) {
+      return res.status(400).json({
+        success: false,
+        message: 'Vui lòng nhập đầy đủ thông tin',
+      });
+    }
+    const category = await categoryService.updateCategory(id, { name, desc, slug, bgUrl, title });
+    return res.status(200).json({
+      success: true,
+      data: category,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Có lỗi xảy ra khi cập nhật danh mục',
+      error: error.message,
     });
   }
 };
 const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    if (!id) {
-      return res.status(200).json({
-        status: "ERR",
-        message: "Id is required",
-      });
-    }
-    const response = await CategoryService.deleteCategory(id);
-    return res.status(200).json(response);
-  } catch (e) {
+    const category = await categoryService.deleteCategory(id);
+    return res.status(200).json({
+      success: true,
+      data: category,
+    });
+  } catch (error) {
     return res.status(500).json({
-      status: "ERR",
-      message: e.message || e,
+      success: false,
+      message: 'Có lỗi xảy ra khi xóa danh mục',
+      error: error.message,
     });
   }
 };
-
 module.exports = {
-  createCategory,
   getAllCategory,
-  getCategoryBySlug,
+  createCategory,
+  updateCategory,
   deleteCategory,
 };

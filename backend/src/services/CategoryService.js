@@ -1,120 +1,79 @@
-const { model } = require("mongoose");
-const Category = require("../models/category");
-const createCategory = async (newCategoryData) => {
-  const { titleCategory, name, img, desc, slug } = newCategoryData;
+const Category = require('../models/CategoryModel');
+
+const getAllCategory = async () => {
   try {
-    // 1. Kiểm tra trong DB chính (MongoDB)
-    const checkCategory = await Category.findOne({ name: name });
-    if (checkCategory !== null) {
-      return { status: "ERR", message: "The name is already exists" };
-    }
-
-    // 2. Tạo mới trong MongoDB
-    const createdCategory = await Category.create({
-      titleCategory,
-      img,
-      desc,
-      slug,
-      name,
-    });
-
-    if (createdCategory) {
-      return {
-        status: "OK",
-        message: "SUCCESS",
-        data: createdCategory,
-      };
-    }
+    const categories = await Category.find();
+    if (categories.length === 0) return [];
+    const filterCategory = categories.filter((cat) => cat.title);
+    return { data: categories, listTitle: filterCategory.map((cat) => cat.title) };
   } catch (error) {
-    return { status: "ERR", message: error.message };
+    throw error;
   }
 };
-const updateCategory = async (id, updateData) => {
+const createCategory = async (categoryData) => {
   try {
-    const category = await Category.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
-    if (!category) {
-      return {
-        status: "ERR",
-        message: "Category not found",
-      };
+    const { name, desc, slug, bgUrl, title } = categoryData;
+    const checkName = await Category.findOne({ name });
+    const checkSlug = await Category.findOne({ slug });
+    const checkBgUrl = await Category.findOne({ bgUrl });
+    const checkTitle = await Category.findOne({ title });
+    if (checkName) {
+      throw new Error('Name đã tồn tại');
     }
-    return {
-      status: "OK",
-      message: "Category updated successfully",
-      data: category,
-    };
+    if (checkSlug) {
+      throw new Error('Slug đã tồn tại');
+    }
+    if (checkBgUrl) {
+      throw new Error('Background URL đã tồn tại');
+    }
+    if (checkTitle) {
+      throw new Error('Title đã tồn tại');
+    }
+
+    const category = new Category({ name, desc, slug, bgUrl, title });
+    await category.save();
+    return category;
   } catch (error) {
-    return {
-      status: "ERR",
-      message: error.message,
-    };
+    throw error;
   }
 };
-const getCategoryBySlug = async (slug) => {
+const updateCategory = async (id, categoryData) => {
   try {
-    const category = await Category.findOne({ slug: slug });
+    const { name, desc, slug, bgUrl, title } = categoryData;
+    const category = await Category.findByIdAndUpdate(
+      id,
+      { name, desc, slug, bgUrl, title },
+      { new: true }
+    );
     if (!category) {
-      return {
-        status: "ERR",
-        message: "Category not found",
-      };
+      throw new Error('Danh mục không tồn tại');
     }
-    return {
-      status: "OK",
-      message: "SUCCESS",
-      data: category,
-    };
+    return category;
   } catch (error) {
-    return {
-      status: "ERR",
-      message: error.message,
-    };
+    throw error;
   }
 };
 const deleteCategory = async (id) => {
   try {
-    const category = await Category.findByIdAndDelete(id);
-    if (!category) {
-      return {
-        status: "ERR",
-        message: "Category not found",
-      };
-    }
-    return {
-      status: "OK",
-      message: "Category deleted successfully",
-    };
-  } catch (error) {
-    return {
-      status: "ERR",
-      message: error.message,
-    };
-  }
-};
-const getAllCategory = async () => {
-  try {
-    const categories = await Category.find();
+    // Tìm và cập nhật trạng thái isDeleted thành true
+    const updatedCategory = await Category.findByIdAndUpdate(
+      id,
+      { isDeleted: true },
+      { new: true } // Trả về bản ghi sau khi đã cập nhật
+    );
 
-    if (categories && categories.length > 0) {
-      return {
-        status: "OK",
-        message: "SUCCESS",
-        data: categories,
-      };
+    if (!updatedCategory) {
+      throw new Error('Danh mục không tồn tại');
     }
+
+    return updatedCategory;
   } catch (error) {
-    return {
-      status: "ERR",
-      message: error.message,
-    };
+    throw error;
   }
 };
 module.exports = {
-  createCategory,
   getAllCategory,
-  getCategoryBySlug,
+  createCategory,
   updateCategory,
   deleteCategory,
 };

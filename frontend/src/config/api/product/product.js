@@ -1,39 +1,28 @@
-import api from "../axios";
-const getAllByProduct = async (
-  slug,
+import api from '../axios';
+const getAllCategory = async () => {
+  return api.get('/category/getAll');
+};
+const getAllProducts = async (
   page = 1,
   limit = 8,
-  sortByPrice,
-  searchById,
-  sortByPlaned,
-  sortByServer,
+  slug = '',
+  planed = '',
+  server = 0,
+  priceRange = ''
 ) => {
-  if (!slug) {
-    throw new Error("Slug is required!");
-  }
-  const res = await api.get("/product/getBySlug", {
-    params: {
-      slug,
-      page,
-      limit,
-      sortByPrice: sortByPrice === "all" ? "" : sortByPrice,
-      searchById: searchById === "0" ? "" : searchById,
-      sortByPlaned: sortByPlaned === "all" ? "" : sortByPlaned,
-      sortByServer: sortByServer === "all" ? "" : sortByServer,
-    },
-  });
-
+  const params = {
+    page,
+    limit,
+    slug: slug,
+    server: server,
+    planed: planed,
+    priceRange: priceRange,
+  };
+  const res = await api.get('/product/getAll', { params });
   return res.data;
 };
-const getProductById = async (id) => {
-  try {
-    if (!id) {
-      throw new Error("Thiếu id");
-    }
-    const res = await api.get(`/product/getDetails?productId=${id}`);
-    return res.data;
-  } catch (error) {
-    console.error("Lỗi", error);
-  }
+const getProductsById = async (id) => {
+  const res = await api.get(`/product/getById/${id}`);
+  return res.data;
 };
-export { getAllByProduct, getProductById };
+export { getAllCategory, getAllProducts, getProductsById };

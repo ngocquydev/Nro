@@ -1,15 +1,12 @@
-const Category = require('./CategoryRouter');
 const User = require('./UserRouter');
-const Product = require('./ProductRouter');
-const Blogs = require('./BlogsRouter');
-const NapThe = require('./NapTheRouter');
-
+const Category = require('./CategoryRouter');
+const Products = require('./ProductsRouter');
+const Recharge = require('./RechargeRouter');
 const routes = (app) => {
-  app.use('/api/category', Category);
   app.use('/api/user', User);
-  app.use('/api/product', Product);
-  app.use('/api/blogs', Blogs);
-  app.use('/api/napthe', NapThe);
+  app.use('/api/category', Category);
+  app.use('/api/product', Products);
+  app.use('/api/recharge', Recharge);
 };
 
 module.exports = routes;

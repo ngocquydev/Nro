@@ -1,8 +1,11 @@
-const axios = require("axios");
-const tsrApi = axios.create({
+const axios = require('axios');
+const https = require('https');
+const tsrClient = axios.create({
   baseURL: process.env.URL_THE_SIEU_RE,
   timeout: 15000,
-  maxBodyLength: Infinity,
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false,
+  }),
 });
 
-module.exports = tsrApi;
+module.exports = tsrClient;

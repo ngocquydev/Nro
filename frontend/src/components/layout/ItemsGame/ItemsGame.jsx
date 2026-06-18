@@ -1,9 +1,8 @@
-import { Button as BootstrapBtn } from "react-bootstrap";
-import styles from "./styles.module.scss";
-import Button from "@components/common/Button/Button";
+import { Button as BootstrapBtn } from 'react-bootstrap';
+import styles from './styles.module.scss';
+import Button from '@components/common/Button/Button';
 function ItemsGame({ src, title, card, atm, planed, server, category, id }) {
-  const { container, boxImg, boxContent, boxBtn, containerBtn, idItem } =
-    styles;
+  const { container, boxImg, boxContent, boxBtn, containerBtn, idItem } = styles;
   return (
     <div className={container}>
       {/* Ảnh */}
@@ -11,7 +10,7 @@ function ItemsGame({ src, title, card, atm, planed, server, category, id }) {
         <img src={src} alt={title} />
         <div className={containerBtn}>
           <div className={boxBtn}>
-            <Button text={"Mua Ngay"} isBg={false} />
+            <Button text={'Mua Ngay'} isBg={false} />
           </div>
           <div className={boxBtn}>
             <BootstrapBtn variant="primary">Đặt cọc</BootstrapBtn>
@@ -33,7 +32,7 @@ function ItemsGame({ src, title, card, atm, planed, server, category, id }) {
           </div>
         </div>
 
-        <div className="text-center mb-3">
+        <div className="mb-3 text-center">
           Đăng ký: <strong>{category}</strong>
         </div>
 
@@ -51,11 +50,7 @@ function ItemsGame({ src, title, card, atm, planed, server, category, id }) {
         </div>
       </div>
       <div>
-        <Button
-          text={"Chi tiết"}
-          isBg={false}
-          link={`/account?productId=${id}`}
-        />
+        <Button text={'Chi tiết'} isBg={false} link={`/pack-nick-ngoc-rong-vip/account?id=${id}`} />
       </div>
     </div>
   );

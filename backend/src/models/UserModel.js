@@ -1,10 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema(
   {
     uid: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true },
+    isDeleted: { type: Boolean, default: false },
     card: {
       type: mongoose.Schema.Types.Decimal128,
       default: 0,
@@ -13,8 +14,8 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.Decimal128,
       default: 0,
     },
-    role: { type: String, enum: ["user", "admin"], default: "user" },
+    role: { type: String, enum: ['user', 'admin'], default: 'user' },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model('User', userSchema);

@@ -7,7 +7,7 @@ const tsrApi = require('./config/axios');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const admin = require('firebase-admin');
-
+const multer = require('multer');
 try {
   const serviceAccount = require('../serviceAccountKey.json');
   admin.initializeApp({
@@ -24,6 +24,8 @@ async function startServer() {
     await connectDB();
 
     const app = express();
+    const upload = multer();
+
     app.set('trust proxy', 1);
 
     // Middleware
@@ -34,6 +36,7 @@ async function startServer() {
     });
     app.use(cookieParser());
     app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
     const port = process.env.PORT || 3001;
 
     // Routes

@@ -1,52 +1,51 @@
-import {
-  BsGrid,
-  BsKey,
-  BsCashStack,
-  BsClockHistory,
-  BsCartCheck,
-} from "react-icons/bs";
-import { Card, Col, Row, Nav, Container } from "react-bootstrap";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import ChangePassword from "./ChangePassword";
-import styles from "./styles.module.css";
-import BalanceHistory from "./BalanceHistory";
-import Transaction from "./Transaction";
-import Purchase from "./Purchase";
-import DashboardMember from "./DashboardMember";
-import { useContext } from "react";
-import Breadcrumbs from "@components/common/Breadcrumbs/Breadcrumbs";
-import { AuthContext } from "@contexts/AuthProvider";
+import { BsGrid, BsKey, BsCashStack, BsClockHistory, BsCartCheck } from 'react-icons/bs';
+import { Card, Col, Row, Nav, Container } from 'react-bootstrap';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import ChangePassword from './ChangePassword';
+import styles from './styles.module.css';
+import BalanceHistory from './BalanceHistory';
+import Transaction from './Transaction';
+import Purchase from './Purchase';
+import DashboardMember from './DashboardMember';
+import Breadcrumbs from '@components/common/Breadcrumbs/Breadcrumbs';
+import { auth } from '@config/firebase';
+import { useEffect } from 'react';
 function MemberLayout() {
   const location = useLocation();
-  const { user, loadingUser } = useContext(AuthContext);
-  const navigate = useNavigate();
   const { memberSidebar } = styles;
+  const navigator = useNavigate();
+  useEffect(() => {
+    if (!auth.currentUser) {
+      // Handle the case when user is not authenticated
+      navigator('/login');
+    }
+  }, []);
   const getTitle = () => {
     switch (location.pathname) {
-      case "/member":
-        return "Tài Khoản";
-      case "/member/password":
-        return "Thay đổi mật khẩu";
-      case "member/balance-history":
-        return "Biến Động Số Dư";
+      case '/member':
+        return 'Tài Khoản';
+      case '/member/password':
+        return 'Thay đổi mật khẩu';
+      case 'member/balance-history':
+        return 'Biến Động Số Dư';
       default:
-        return "Tài khoản";
+        return 'Tài khoản';
     }
   };
   const changleUI = () => {
     switch (location.pathname) {
-      case "/member":
+      case '/member':
         return <DashboardMember />;
-      case "/member/password":
+      case '/member/password':
         return <ChangePassword />;
-      case "/member/balance-history":
+      case '/member/balance-history':
         return <BalanceHistory />;
-      case "/member/transaction":
+      case '/member/transaction':
         return <Transaction />;
-      case "/member/purchase":
+      case '/member/purchase':
         return <Purchase />;
       default:
-        return "Tài khoản";
+        return 'Tài khoản';
     }
   };
   return (
@@ -56,18 +55,18 @@ function MemberLayout() {
       <Row className="g-4">
         {/* Sidebar */}
         <Col xs={12} md={4} lg={3}>
-          <Card className="shadow-sm h-100">
+          <Card className="h-100 shadow-sm">
             <Card.Body className="p-0">
               <Nav className={`flex-column ${memberSidebar}`}>
                 <Nav.Link
                   as={Link}
                   to="/member"
-                  active={location.pathname === "/member"}
+                  active={location.pathname === '/member'}
                   style={
-                    location.pathname === "/member"
+                    location.pathname === '/member'
                       ? {
-                          backgroundColor: "red",
-                          color: "#fff",
+                          backgroundColor: 'red',
+                          color: '#fff',
                         }
                       : null
                   }
@@ -79,12 +78,12 @@ function MemberLayout() {
                 <Nav.Link
                   as={Link}
                   to="/member/password"
-                  active={location.pathname === "/member/password"}
+                  active={location.pathname === '/member/password'}
                   style={
-                    location.pathname === "/member/password"
+                    location.pathname === '/member/password'
                       ? {
-                          backgroundColor: "red",
-                          color: "#fff",
+                          backgroundColor: 'red',
+                          color: '#fff',
                         }
                       : null
                   }
@@ -96,12 +95,12 @@ function MemberLayout() {
                 <Nav.Link
                   as={Link}
                   to="/member/balance-history"
-                  active={location.pathname === "/member/balance-history"}
+                  active={location.pathname === '/member/balance-history'}
                   style={
-                    location.pathname === "/member/balance-history"
+                    location.pathname === '/member/balance-history'
                       ? {
-                          backgroundColor: "red",
-                          color: "#fff",
+                          backgroundColor: 'red',
+                          color: '#fff',
                         }
                       : null
                   }
@@ -113,12 +112,12 @@ function MemberLayout() {
                 <Nav.Link
                   as={Link}
                   to="/member/transaction"
-                  active={location.pathname === "/member/transaction"}
+                  active={location.pathname === '/member/transaction'}
                   style={
-                    location.pathname === "/member/transaction"
+                    location.pathname === '/member/transaction'
                       ? {
-                          backgroundColor: "red",
-                          color: "#fff",
+                          backgroundColor: 'red',
+                          color: '#fff',
                         }
                       : null
                   }
@@ -130,12 +129,12 @@ function MemberLayout() {
                 <Nav.Link
                   as={Link}
                   to="/member/purchase"
-                  active={location.pathname === "/member/purchase"}
+                  active={location.pathname === '/member/purchase'}
                   style={
-                    location.pathname === "/member/purchase"
+                    location.pathname === '/member/purchase'
                       ? {
-                          backgroundColor: "red",
-                          color: "#fff",
+                          backgroundColor: 'red',
+                          color: '#fff',
                         }
                       : null
                   }

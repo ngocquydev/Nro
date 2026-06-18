@@ -1,17 +1,45 @@
-import { Button, Container } from "react-bootstrap";
-import Breadcrumbs from "@components/common/Breadcrumbs/Breadcrumbs";
-import { useContext } from "react";
-import { ProductsContext } from "@contexts/ProductsProvider";
-import formatMoney from "@/util/formatMoney";
-import LoadingCommon from "@components/common/LoadingCommon/LoadingCommon";
+import { Button, Container } from 'react-bootstrap';
+import Breadcrumbs from '@components/common/Breadcrumbs/Breadcrumbs';
+import { useEffect, useState } from 'react';
+import formatMoney from '@/util/formatMoney';
+import LoadingCommon from '@components/common/LoadingCommon/LoadingCommon';
+import { useSearchParams } from 'react-router-dom';
+import { getProductsById } from '@config/api/product/product';
 
 function Detail() {
-  const { details, isLoading } = useContext(ProductsContext);
+  const [searchParams] = useSearchParams();
+  const [data, setData] = useState(null); // Khởi tạo null thay vì [] để check tồn tại dễ hơn
+  const [isLoading, setIsLoading] = useState(true);
+  const id = searchParams.get('id');
 
-  if (isLoading) {
-    return <LoadingCommon loading={true} />;
-  }
-  const product = details.product;
+  useEffect(() => {
+    if (!id) return;
+
+    let isMounted = true; // Biến cờ để tránh lỗi setState khi component unmount
+    setIsLoading(true);
+
+    getProductsById(id)
+      .then((res) => {
+        if (isMounted) {
+          setData(res.data);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error('Lỗi khi tải chi tiết sản phẩm:', err);
+        if (isMounted) setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    }; // Cleanup
+  }, [id]);
+
+  if (isLoading) return <LoadingCommon loading={true} />;
+  if (!data) return <Container className="py-5 text-center">Sản phẩm không tồn tại!</Container>;
+
+  // Helper an toàn cho giá tiền
+  const getPrice = (val) => val?.$numberDecimal || val || 0;
 
   return (
     <Container className="py-4">
@@ -19,97 +47,74 @@ function Detail() {
         <Breadcrumbs
           title={
             <div className="fs-4 mt-3">
-              <div className="mb-2">ACC nro #{product?._id} - Như Ảnh</div>
-
+              <div className="fw-bold mb-2">ACC nro #{data?._id}</div>
               <div className="mb-3">
-                <span className="me-2 text-danger fw-bold">
-                  CARD : {formatMoney(product?.card?.$numberDecimal)}
+                <span className="text-danger fw-bold me-2">
+                  CARD : {formatMoney(getPrice(data?.Card))}
                   <sup>đ</sup>
                 </span>
                 <span className="text-muted">|</span>
-                <span className="ms-2 text-success fw-bold">
-                  ATM : {formatMoney(product?.atm?.$numberDecimal)}
+                <span className="text-success fw-bold ms-2">
+                  ATM : {formatMoney(getPrice(data?.ATM))}
                   <sup>đ</sup>
                 </span>
               </div>
-
-              <Button variant="danger" className="w-50 fw-bold py-2">
+              <Button variant="danger" className="fw-bold w-50 py-2 shadow-sm">
                 MUA NGAY
               </Button>
             </div>
           }
-          desc={`#${product?._id}`}
+          desc={`#${data?._id}`}
         />
 
-        {/* ================= THÔNG TIN ================= */}
-        <div className="mt-4">
-          <h2 className="fw-bold h4">Thông Tin Chi Tiết</h2>
+        {/* Thông tin chi tiết */}
+        <div className="mt-4 rounded bg-white p-4 shadow-sm">
+          <h2 className="fw-bold h4 mb-3">Thông Tin Chi Tiết</h2>
           <hr />
-
           <div className="d-flex flex-column gap-3">
             <div className="d-flex gap-5">
               <div>
                 <span className="text-muted">HÀNH TINH:</span>
-                <strong className="text-danger ms-2">{product?.planed}</strong>
+                <strong className="text-danger ms-2">{data?.planed || 'Chưa cập nhật'}</strong>
               </div>
               <div>
                 <span className="text-muted">SERVER:</span>
-                <strong className="text-danger ms-2">
-                  {product?.server} sao
-                </strong>
+                <strong className="text-danger ms-2">{data?.server || 0} sao</strong>
               </div>
             </div>
-
             <div>
               <span className="text-muted">ĐĂNG KÝ:</span>
-              <strong className="text-danger ms-2">
-                {product?.accountType}
-              </strong>
+              <strong className="text-danger ms-2">{data?.register || 'Trống'}</strong>
             </div>
-
-            <div className="p-3 bg-light rounded border-start border-danger border-4">
+            <div className="bg-light border-start border-danger rounded border-4 p-3">
               <span className="text-muted small">NỔI BẬT:</span>
-              <br />
-              <strong className="text-danger text-uppercase">
-                {details?.desc || "Đang cập nhật nội dung nổi bật..."}
-              </strong>
+              <div className="text-danger fw-bold text-uppercase mt-1">
+                {data?.desc || 'Đang cập nhật nội dung nổi bật...'}
+              </div>
             </div>
           </div>
         </div>
 
-        <hr className="my-4" />
-
-        {/* ================= HÌNH ẢNH ================= */}
+        {/* Hình ảnh */}
         <div className="mt-4">
-          <h3 className="h5 mb-3 fw-bold">Hình ảnh thực tế</h3>
-          {details?.images?.length > 0 ? (
-            details.images.map((img, index) => (
-              <div className="mb-3" key={index}>
+          <h3 className="h5 fw-bold mb-3">Hình ảnh thực tế</h3>
+          {data?.img?.length > 0 ? (
+            data.img.map((img, index) => (
+              <div className="mb-4" key={index}>
                 <img
                   src={img}
-                  alt={`Sản phẩm ${product?._id} - hình ${index + 1}`}
-                  loading="lazy" // Tối ưu hiệu năng load ảnh
+                  alt={`Sản phẩm ${data?._id} - hình ${index + 1}`}
+                  className="img-fluid rounded shadow-sm"
+                  style={{ width: '100%', borderRadius: '12px' }}
                   onError={(e) => {
-                    e.target.onerror = null;
                     e.target.src =
-                      "https://s3.hcm-1.cloud.cmctelecom.vn/bannick/storage/imageacc/d09635c35c89f12b4555da2ba8ad0192.jpg";
-                  }}
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    borderRadius: "12px",
-                    display: "block",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                      'https://s3.hcm-1.cloud.cmctelecom.vn/bannick/storage/imageacc/d09635c35c89f12b4555da2ba8ad0192.jpg';
                   }}
                 />
               </div>
             ))
           ) : (
-            <div className="text-center py-5 bg-light rounded">
-              <p className="text-muted mb-0">
-                Không có hình ảnh chi tiết cho sản phẩm này.
-              </p>
-            </div>
+            <div className="bg-light rounded py-5 text-center">Không có hình ảnh chi tiết.</div>
           )}
         </div>
       </div>

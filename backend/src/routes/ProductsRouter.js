@@ -1,0 +1,10 @@
+const express = require('express');
+const router = express.Router();
+const productController = require('../controllers/productController');
+const validateCategory = require('../middleware/validate-category');
+router.get('/getAll', productController.getAllProducts);
+// router.get('/delete/:id', productController.deleteProduct);
+router.post('/create', productController.createProducts);
+router.get('/getById/:id', productController.getById);
+// router.put('/update/:id', validateCategory, productController.updateProduct);
+module.exports = router;
