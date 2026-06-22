@@ -1,13 +1,16 @@
 const express = require('express');
 const dotenv = require('dotenv');
-dotenv.config({ path: '../.env' });
-const routes = require('./routes/index');
-const connectDB = require('./config/db');
-const tsrApi = require('./config/axios');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const admin = require('firebase-admin');
-const multer = require('multer');
+
+// Load env
+dotenv.config({ path: '../.env' });
+
+const routes = require('./routes/index');
+const connectDB = require('./config/db');
+
+// Khởi tạo Firebase Admin
 try {
   const serviceAccount = require('../serviceAccountKey.json');
   admin.initializeApp({
@@ -17,35 +20,38 @@ try {
 } catch (error) {
   console.error('Firebase Admin init error:', error.message);
 }
-// 2. Tạo hàm khởi chạy chính
+
 async function startServer() {
   try {
-    // Kết nối DB trước
+    // 1. Kết nối DB trước
     await connectDB();
 
     const app = express();
-    const upload = multer();
+
+    // 2. Cấu hình CORS - Quan trọng để React không bị chặn
+    app.use(
+      cors({
+        origin: 'http://localhost:5173',
+        credentials: true, // Bật nếu bạn dùng cookies/session/JWT
+      })
+    );
 
     app.set('trust proxy', 1);
-
-    // Middleware
-    app.use(cors());
-    app.use((req, res, next) => {
-      res.header('Access-Control-Allow-Private-Network', 'true');
-      next();
-    });
-    app.use(cookieParser());
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
-    const port = process.env.PORT || 3001;
-
-    // Routes
+    app.use(cookieParser());
+    app.use(express.raw({ type: '*/*' }));
     routes(app);
 
-    app.get('/test', (req, res) => {
-      res.send('Server đang chạy bình thường!');
+    app.use((req, res, next) => {
+      res.status(404).json({
+        success: false,
+        message: 'Endpoint không tồn tại. Hãy kiểm tra lại tiền tố /api',
+      });
     });
 
+    // 5. Khởi động server
+    const port = process.env.PORT || 3001;
     app.listen(port, () => {
       console.log('Server is running on port:', port);
     });
@@ -54,4 +60,5 @@ async function startServer() {
     process.exit(1);
   }
 }
+
 startServer();

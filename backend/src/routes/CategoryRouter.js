@@ -5,8 +5,7 @@ const validateCategory = require('../middleware/validate-category');
 const { verifyRole, checkPermission } = require('../middleware/authMiddleware');
 router.get(
   '/getAll',
-  verifyRole('user'),
-  checkPermission('read'),
+
   categoryController.getAllCategory
 );
 router.get(

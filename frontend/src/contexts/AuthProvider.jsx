@@ -178,7 +178,7 @@ export const AuthProvider = ({ children }) => {
         setLoadingUser(true);
         try {
           const res = await getUser();
-          setUserDT(res.data.data);
+          setUserDT(res.data?.data);
         } catch (err) {
           console.error('Lỗi lấy user:', err);
         } finally {

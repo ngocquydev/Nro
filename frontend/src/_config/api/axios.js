@@ -2,9 +2,9 @@ import axios from 'axios';
 import { auth } from '../firebase';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BE_URL,
-  timeout: 10000,
+  baseURL: import.meta.env.VITE_BE_URL_NgRok,
   headers: {
+    'ngrok-skip-browser-warning': 'true',
     'Content-Type': 'application/json',
   },
 });

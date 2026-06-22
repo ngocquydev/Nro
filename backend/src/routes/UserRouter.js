@@ -5,6 +5,6 @@ const { checkMethod } = require('../middleware/checkMethod');
 const UserController = require('../controllers/UserController');
 const { verifyRole } = require('../middleware/authMiddleware');
 router.post('/register', UserController.createUser);
-router.post('/login', verifyRole('user'), UserController.loginUser);
-router.post('/getUser', verifyRole('user'), UserController.getUser);
+router.post('/login', UserController.loginUser);
+router.get('/getUser', verifyRole('user'), UserController.getUser);
 module.exports = router;

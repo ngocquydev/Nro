@@ -26,7 +26,8 @@ export const ProductsProvider = ({ children }) => {
     const planed = searchParams.get('planed') || '';
     const priceRange = searchParams.get('priceRange') || '';
     const slug = location.pathname.split('/')[1];
-    const isSlug = slug.includes(['member']);
+    const keywords = ['member', 'nap-atm', 'login', 'register'];
+    const isSlug = keywords.some((keyword) => slug.includes(keyword));
     if (isSlug) return;
     setLoading(true);
     getAllProducts(page, 8, slug, planed, server, priceRange)

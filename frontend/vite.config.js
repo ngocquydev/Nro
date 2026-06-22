@@ -5,10 +5,18 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   envDir: '../',
+  // server: {
+  //   proxy: {
+  //     '/api': {
+  //       target: 'https://unsummarisable-rod-overtrustfully.ngrok-free.dev',
+  //       changeOrigin: true,
+  //       secure: false,
+  //     },
+  //   },
+  // },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
-      // ... (giữ nguyên các alias khác của bạn)
       '@styles': path.resolve(__dirname, 'src/_styles'),
       '@images': path.resolve(__dirname, 'src/assets/Images'),
       '@contexts': path.resolve(__dirname, 'src/contexts'),

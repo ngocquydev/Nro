@@ -1,9 +1,9 @@
 import NapTheATM from '@components/layout/FormNapThe/NapTheATM';
 function PageATM() {
-    return (
-        <>
-            <NapTheATM />
-        </>
-    );
+  return (
+    <>
+      <NapTheATM />
+    </>
+  );
 }
 export default PageATM;

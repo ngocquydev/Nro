@@ -15,7 +15,7 @@ const registerUser = async (data) => {
   return res.data;
 };
 const getUser = async () => {
-  const res = await api.post(`/user/getUser`);
+  const res = await api.get('/user/getUser');
   return res.data;
 };
 export { loginUser, registerUser, getUser };
