@@ -1,15 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // 1. Import Link để chặn reload
-import styles from "./styles.module.scss";
-import { Container } from "react-bootstrap";
-import { IoMdMenu } from "react-icons/io";
-import { FaRegUser } from "react-icons/fa6";
-import { IoChevronDown, IoClose } from "react-icons/io5";
-import cls from "classnames";
-import { auth } from "@config/firebase";
-import UserSuccess from "./UserSuccess/UserSuccess";
-import MenuHeader from "@components/layout/Header/contans";
-import { AuthContext } from "@contexts/AuthProvider";
+import React, { useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // 1. Import Link để chặn reload
+import styles from './styles.module.scss';
+import { Container } from 'react-bootstrap';
+import { IoMdMenu } from 'react-icons/io';
+import { FaRegUser } from 'react-icons/fa6';
+import { IoChevronDown, IoClose } from 'react-icons/io5';
+import cls from 'classnames';
+import { auth } from '@/_config/firebase';
+import UserSuccess from './UserSuccess/UserSuccess';
+import MenuHeader from '@components/layout/Header/contans';
+import { AuthContext } from '@contexts/AuthProvider';
+import { checkRecharges } from '@/_config/api/recharges/recharges';
 
 function Header() {
   const {
@@ -24,23 +25,39 @@ function Header() {
     subMenu,
     showSubMenu,
     noneSubMenu,
-  } = styles; 
+  } = styles;
   const [toggle, setToggle] = useState(false);
   const [hideSubMenu, setHideSubMenu] = useState(null);
   const [user, setUser] = useState(null);
+  const { userDT } = useContext(AuthContext);
   const handleHideSubMenu = (name) => {
     setHideSubMenu((prev) => (prev === name ? null : name));
   };
-useEffect(() => {
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((u) => {
+      setUser(u);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+  useEffect(() => {
+    if (auth.currentUser && userDT?._id) {
+      const intervalId = setInterval(() => {
+        checkRecharges({ userId: userDT._id })
+          .then((res) => {
+            if (res && res.data && res.data.success === false) {
+              clearInterval(intervalId);
+            }
+          })
+          .catch((err) => {
+            console.error('Lỗi khi kiểm tra nạp tiền:', err);
+          });
+      }, 5000);
 
-  const unsubscribe = auth.onAuthStateChanged((u) => {
-        setUser(u);
-      }
-    )
-  return () => {
-    unsubscribe();
-  };
-}, []);
+      return () => clearInterval(intervalId);
+    }
+  }, [auth.currentUser, userDT?._id]);
   return (
     <Container className="p-0">
       <header className={header}>
@@ -89,7 +106,7 @@ useEffect(() => {
               MenuHeader.slice(5, 6).map((item) => (
                 <li key={item.name}>
                   <Link to={item.link}>
-                    <FaRegUser size={18} className="mb-2 me-1" />
+                    <FaRegUser size={18} className="me-1 mb-2" />
                     {item.name}
                   </Link>
                 </li>
@@ -100,7 +117,7 @@ useEffect(() => {
           <div
             className={boxIconMenu}
             onClick={() => setToggle(!toggle)}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
           >
             {!toggle ? <IoMdMenu size={30} /> : <IoClose size={30} />}
           </div>

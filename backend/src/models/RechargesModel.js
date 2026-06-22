@@ -7,6 +7,8 @@ const rechargesSchema = new mongoose.Schema(
     code: { type: String, required: true },
     serial: { type: String, required: true },
     isDeleted: { type: Boolean, default: false },
+    desc: { type: String },
+    type: { type: String },
     amount: {
       type: Number,
       required: true,

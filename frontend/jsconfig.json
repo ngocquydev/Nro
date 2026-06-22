@@ -10,7 +10,7 @@
       "@contexts/*": ["src/contexts/*"],
       "@page/*": ["src/page/*"],
       "@contans/*": ["src/contans/*"],
-      "@config/*": ["src/config/*"],
+      "@config/*": ["src/_config/*"],
       "@util": ["src/util"],
       // Để cái chung nhất xuống cuối cùng
       "@/*": ["src/*"]

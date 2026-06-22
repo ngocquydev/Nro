@@ -5,6 +5,9 @@ const getAllCategory = async () => {
     const categories = await Category.find();
     if (categories.length === 0) return [];
     const filterCategory = categories.filter((cat) => cat.title);
+    if (!filterCategory.length) {
+      throw new Error('Không có danh mục nào');
+    }
     return { data: categories, listTitle: filterCategory.map((cat) => cat.title) };
   } catch (error) {
     throw error;

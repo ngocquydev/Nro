@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Form, Row, Col, Button } from 'react-bootstrap';
 import styles from './styles.module.scss';
 import { data, useNavigate, useSearchParams } from 'react-router-dom';
-import { getAllProducts } from '@config/api/product/product';
+import { getAllProducts } from '@/_config/api/product/product';
 import { ProductsContext } from '@contexts/ProductsProvider';
 
 function ProductFilterForm() {

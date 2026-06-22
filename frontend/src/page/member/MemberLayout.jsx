@@ -8,17 +8,18 @@ import Transaction from './Transaction';
 import Purchase from './Purchase';
 import DashboardMember from './DashboardMember';
 import Breadcrumbs from '@components/common/Breadcrumbs/Breadcrumbs';
-import { auth } from '@config/firebase';
+import { auth } from '@/_config/firebase';
 import { useEffect } from 'react';
 function MemberLayout() {
   const location = useLocation();
   const { memberSidebar } = styles;
   const navigator = useNavigate();
   useEffect(() => {
-    if (!auth.currentUser) {
-      // Handle the case when user is not authenticated
-      navigator('/login');
-    }
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (!user) navigator('/login');
+    });
+
+    return () => unsubscribe();
   }, []);
   const getTitle = () => {
     switch (location.pathname) {

@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import { getAllCategory } from '@config/api/category/category';
-import { getAllProducts } from '@config/api/product/product';
+import { getAllCategory } from '@/_config/api/category/category';
+import { getAllProducts } from '@/_config/api/product/product';
 import { useLocation, useSearchParams } from 'react-router-dom';
 export const ProductsContext = createContext(null);
 
@@ -26,6 +26,8 @@ export const ProductsProvider = ({ children }) => {
     const planed = searchParams.get('planed') || '';
     const priceRange = searchParams.get('priceRange') || '';
     const slug = location.pathname.split('/')[1];
+    const isSlug = slug.includes(['member']);
+    if (isSlug) return;
     setLoading(true);
     getAllProducts(page, 8, slug, planed, server, priceRange)
       .then((res) => {

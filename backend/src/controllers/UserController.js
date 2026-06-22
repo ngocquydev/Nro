@@ -37,7 +37,13 @@ const loginUser = async (req, res) => {
 };
 const getUser = async (req, res) => {
   try {
-    const user = await UserService.getUserByUID(req.body.uid);
+    const uid = req.headers['x-user-uid'];
+    if (!uid)
+      return res.status(400).json({
+        status: 'ERR',
+        message: 'The input is required (uid)',
+      });
+    const user = await UserService.getUserByUID(uid);
     return res.status(200).json({
       status: 'OK',
       message: 'Success',

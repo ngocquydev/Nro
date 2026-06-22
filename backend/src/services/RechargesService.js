@@ -43,6 +43,8 @@ const RechargeService = async (partnerKey, partnerId, body) => {
       userId,
       request_id,
       status: Number(data.status),
+      desc: 'Thẻ cào',
+      type: 'Card',
       message: data.message || 'Không có phản hồi',
     });
     await newRecharge.save();
@@ -86,4 +88,32 @@ const checkRechargeService = async (partnerKey, partnerId, body) => {
     throw new Error('Đang kiểm tra...');
   }
 };
-module.exports = { RechargeService, checkRechargeService };
+const getHistory = async (userId, page = 1, limit = 10) => {
+  try {
+    const skip = (page - 1) * limit;
+
+    const totalCount = await rechargesModel.countDocuments({ userId, isDeleted: false });
+
+    const listHistory = await rechargesModel
+      .find({ userId, isDeleted: false })
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+    if (listHistory.length === 0) {
+      throw new Error('Không có lịch sử nạp tiền nào');
+    }
+    return {
+      listHistory,
+      pagination: {
+        totalItems: totalCount,
+        totalPages: Math.ceil(totalCount / limit),
+        currentPage: page,
+        limit: limit,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching history:', error);
+    throw new Error('Lỗi khi lấy lịch sử nạp tiền');
+  }
+};
+module.exports = { RechargeService, checkRechargeService, getHistory };

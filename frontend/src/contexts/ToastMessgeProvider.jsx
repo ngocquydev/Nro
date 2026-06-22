@@ -5,14 +5,14 @@ import 'react-toastify/dist/ReactToastify.css';
 export const ToastMessgeContext = createContext(null);
 
 export const ToastMessgeProvider = ({ children }) => {
-    const value = {
-        toast,
-    };
+  const value = {
+    toast,
+  };
 
-    return (
-        <ToastMessgeContext.Provider value={value}>
-            {children}
-            <ToastContainer />
-        </ToastMessgeContext.Provider>
-    );
+  return (
+    <ToastMessgeContext.Provider value={value}>
+      {children}
+      <ToastContainer />
+    </ToastMessgeContext.Provider>
+  );
 };

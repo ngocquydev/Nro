@@ -1,22 +1,19 @@
-import { BsPerson } from "react-icons/bs";
-import Button from "@components/common/Button/Button";
-import { signOut } from "firebase/auth";
-import styles from "../styles.module.scss";
-import { useNavigate } from "react-router-dom";
-import { auth } from "@config/firebase";
+import { BsPerson } from 'react-icons/bs';
+import Button from '@components/common/Button/Button';
+import { signOut } from 'firebase/auth';
+import styles from '../styles.module.scss';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '@/_config/firebase';
+import { useContext } from 'react';
+import { AuthContext } from '@contexts/AuthProvider';
+import formatMoney from '@/util/formatMoney';
 function UserSuccess() {
-  const {
-    containerIcon,
-    quantiTy,
-    menuChild,
-    listTop,
-    containerBottom,
-    hiStory,
-  } = styles;
+  const { containerIcon, quantiTy, menuChild, listTop, containerBottom, hiStory } = styles;
   const nagavigator = useNavigate();
+  const { userDT } = useContext(AuthContext);
   const handleLogout = async () => {
     await signOut(auth);
-    nagavigator("/login");
+    nagavigator('/login');
   };
   return (
     <div className={containerIcon}>
@@ -26,11 +23,11 @@ function UserSuccess() {
       <div className={menuChild}>
         <div className={listTop}>
           <div>
-            Số dư: 0 <sup>đ</sup>
+            Số dư card: {formatMoney(userDT?.card?.$numberDecimal)} <sup>đ</sup>
           </div>
           <div>|</div>
           <div>
-            KM: 0 <sup>coin</sup>
+            Số dư ATM: {formatMoney(userDT?.atm?.$numberDecimal)} <sup>đ</sup>
           </div>
         </div>
 
@@ -43,7 +40,7 @@ function UserSuccess() {
         <hr color="#ccc" />
 
         <div className={containerBottom}>
-          <Button text={"Hồ sơ"} link={"/member"} isBg={false} />
+          <Button text={'Hồ sơ'} link={'/member'} isBg={false} />
           <Button text="Đăng xuất" handleLogout={handleLogout} isBg={true} />
         </div>
       </div>

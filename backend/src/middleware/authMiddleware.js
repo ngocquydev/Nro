@@ -1,95 +1,73 @@
 const admin = require('firebase-admin');
 const User = require('../models/UserModel');
+// 1. Kiểm tra quyền Admin
+const ROLES = {
+  ADMIN: {
+    name: 'admin',
+    permissions: ['read', 'write', 'delete', 'put', 'add'],
+  },
+  USER: {
+    name: 'user',
+    permissions: ['read', 'write'],
+  },
+  GUEST: {
+    name: 'guest',
+    permissions: ['read'],
+  },
+};
+const checkPermission = (action) => {
+  return (req, res, next) => {
+    const userRole = req.user.role; // Lấy từ DB hoặc Token
+    const roleConfig = ROLES[userRole.toUpperCase()];
 
+    if (roleConfig && roleConfig.permissions.includes(action)) {
+      next(); // Có quyền
+    } else {
+      res.status(403).json({ message: 'Bạn không có quyền thực hiện hành động này' });
+    }
+  };
+};
 const getAuthenticatedUser = async (token) => {
-  if (!token) return null;
+  if (!token) throw new Error('Token không tồn tại');
   const decodedToken = await admin.auth().verifyIdToken(token);
   const user = await User.findOne({ uid: decodedToken.uid });
-
-  if (user) {
-    return user;
-  }
-
-  return null;
+  return user;
 };
+const verifyRole = (requiredRole) => {
+  return async (req, res, next) => {
+    try {
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'Token không hợp lệ hoặc thiếu' });
+      }
 
-// 1. Kiểm tra quyền Admin
-const authMiddleWare = async (req, res, next) => {
-  try {
-    const token = req.headers.token?.split(' ')[1];
-    const currentUser = await getAuthenticatedUser(token);
+      const token = authHeader.split(' ')[1];
+      const currentUser = await getAuthenticatedUser(token);
 
-    if (currentUser?.role === 'admin') {
-      req.user = currentUser;
-      next();
-    } else {
-      return res.status(403).json({
-        message: 'Quyền Admin là bắt buộc',
+      if (!currentUser) {
+        return res.status(401).json({ message: 'User không tồn tại' });
+      }
+
+      // Kiểm tra quyền
+      if (currentUser.role === requiredRole || currentUser.role === 'admin') {
+        req.user = currentUser;
+        next();
+      } else {
+        return res.status(403).json({
+          message: `Quyền ${requiredRole} là bắt buộc`,
+          status: 'ERROR',
+        });
+      }
+    } catch (err) {
+      return res.status(401).json({
+        message: 'Token không hợp lệ hoặc hết hạn',
         status: 'ERROR',
       });
     }
-  } catch (err) {
-    return res.status(401).json({
-      message: 'Token không hợp lệ hoặc hết hạn',
-      status: 'ERROR',
-    });
-  }
+  };
 };
 
-const authUserMiddleWare = async (req, res, next) => {
-  try {
-    const token = req.headers.token?.split(' ')[1];
-    const userIdInParams = req.params.id;
-
-    const currentUser = await getAuthenticatedUser(token);
-
-    if (currentUser?.role === 'admin' || currentUser?._id.toString() === userIdInParams) {
-      req.user = currentUser;
-      next();
-    } else {
-      return res.status(403).json({
-        message: 'Bạn không có quyền thực hiện hành động này',
-        status: 'ERROR',
-      });
-    }
-  } catch (err) {
-    return res.status(401).json({
-      message: 'Xác thực thất bại',
-      status: 'ERROR',
-    });
-  }
-};
-
-const checkIsUser = async (req, res, next) => {
-  try {
-    const token = req.headers.token?.split(' ')[1];
-    if (!token) {
-      return res.status(401).json({ status: 'ERROR', message: 'Token missing' });
-    }
-
-    const currentUser = await getAuthenticatedUser(token);
-
-    if (currentUser) {
-      return res.status(200).json({
-        status: 'OK',
-        message: 'Xác thực thành công',
-        data: currentUser,
-      });
-    }
-
-    return res.status(403).json({
-      status: 'ERROR',
-      message: 'Vui lòng đăng nhập lại',
-    });
-  } catch (err) {
-    return res.status(401).json({
-      status: 'ERROR',
-      message: 'Token không hợp lệ hoặc đã hết hạn',
-    });
-  }
-};
 module.exports = {
-  authMiddleWare,
-  authUserMiddleWare,
-  checkIsUser,
+  verifyRole,
+  checkPermission,
 };

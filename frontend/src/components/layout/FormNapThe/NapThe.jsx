@@ -1,76 +1,104 @@
-import { Container, Button, Form, Tabs, Tab } from 'react-bootstrap';
+import { Container, Button, Form } from 'react-bootstrap';
 import styles from './styles.module.css';
 import HistoryNapThe from '../HistoryNapThe/HistoryNapThe';
 import Breadcrumbs from '@components/common/Breadcrumbs/Breadcrumbs';
-import { useEffect } from 'react';
-import { auth } from '@config/firebase';
+import { useContext, useEffect, useState } from 'react';
+import { auth } from '@/_config/firebase';
 import { useNavigate } from 'react-router-dom';
+import { RechagresContext } from '@contexts/RechagresProvider';
+import LoadingCommon from '@components/common/LoadingCommon/LoadingCommon';
+import SelectBox from '@components/common/SelectBox/SelectBox';
+import { CARD_TYPES, DENOMINATIONS } from '@components/common/SelectBox/contans/contans';
+
 function NapThe() {
   const { containerTop, containerForm, wrapPer, formNapCard } = styles;
   const navigator = useNavigate();
+  const { formik } = useContext(RechagresContext);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    if (!auth.currentUser) {
-      navigator('/login');
-    }
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (!user) {
+        navigator('/login');
+      } else {
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
   }, [navigator]);
 
+  if (loading) {
+    return (
+      <div className="py-5 text-center">
+        <LoadingCommon />
+      </div>
+    );
+  }
   return (
     <div className={containerForm}>
       <Container className="py-5">
         <Breadcrumbs title={'Nạp Card'} desc={'Nạp card'} />
         <div className={wrapPer}>
-          {/* Thông báo */}
           <div className={containerTop}>
             <strong className="text-danger">
-              Hệ thống nạp tự động, 100k nhận 100k không chiết khấu
-              <br />
-              Cam kết không nuốt thẻ, vui lòng kiểm tra kỹ mệnh giá thẻ cào trước khi nạp
+              Hệ thống nạp tự động, 100k nhận 100k không chiết khấu Cam kết không nuốt thẻ, vui lòng
+              kiểm tra kỹ mệnh giá thẻ cào trước khi nạp
             </strong>
           </div>
 
-          <Form className="mt-4" id={formNapCard}>
-            {/* Loại thẻ */}
-            <Form.Group className="mb-4">
-              <Form.Select defaultValue="">
-                <option value="" disabled>
-                  Chọn loại thẻ
-                </option>
-                <option value="VIETTEL">Viettel</option>
-                <option value="MOBIFONE">Mobifone</option>
-                <option value="VINAPHONE">Vinaphone</option>
-                <option value="VTC">VTC</option>
-                <option value="GATE">Gate</option>
-                <option value="ZING">Zing</option>
-              </Form.Select>
+          <Form noValidate onSubmit={formik.handleSubmit} id={formNapCard} method="formdarta">
+            {/* TELCO */}
+            <Form.Group className="mt-3 mb-3">
+              <SelectBox
+                formik={formik}
+                data={CARD_TYPES}
+                name={'telco'}
+                placeholder="Chọn loại thẻ"
+              />
             </Form.Group>
 
-            {/* Mệnh giá */}
-            <Form.Group className="mb-4">
-              <Form.Select defaultValue="">
-                <option value="" disabled>
-                  Chọn mệnh giá
-                </option>
-                <option value="10000">10.000 VNĐ</option>
-                <option value="20000">20.000 VNĐ</option>
-                <option value="50000">50.000 VNĐ</option>
-                <option value="100000">100.000 VNĐ</option>
-                <option value="200000">200.000 VNĐ</option>
-                <option value="500000">500.000 VNĐ</option>
-                <option value="1000000">1.000.000 VNĐ</option>
-              </Form.Select>
+            {/* AMOUNT */}
+            <Form.Group className="mb-3">
+              <SelectBox formik={formik} data={DENOMINATIONS} name={'monney'} isMoney={true} />
             </Form.Group>
 
-            {/* Serial */}
-            <Form.Group className="mb-4">
-              <Form.Control type="text" placeholder="Nhập số serial" />
+            {/* SERIAL */}
+            <Form.Group className="mb-3">
+              <Form.Control
+                type="text"
+                name="serial"
+                placeholder="Nhập số serial"
+                value={formik.values.serial}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.serial && formik.errors.serial && (
+                <div className="text-danger mt-1" style={{ fontSize: '0.875em' }}>
+                  {formik.errors.serial}
+                </div>
+              )}
             </Form.Group>
 
-            {/* Mã thẻ */}
-            <Form.Group className="mb-4">
-              <Form.Control type="text" placeholder="Nhập mã thẻ" />
+            {/* CODE */}
+            <Form.Group className="mb-3">
+              <Form.Control
+                type="text"
+                name="code"
+                placeholder="Nhập mã thẻ"
+                value={formik.values.code}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+
+              {formik.touched.code && formik.errors.code && (
+                <div className="text-danger mt-1" style={{ fontSize: '0.875em' }}>
+                  {formik.errors.code}
+                </div>
+              )}
             </Form.Group>
 
-            <Button variant="primary" className="w-100 py-2">
+            <Button type="submit" className="w-100 py-2">
               Nạp thẻ
             </Button>
           </Form>

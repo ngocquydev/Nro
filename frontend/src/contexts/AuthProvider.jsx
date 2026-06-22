@@ -9,9 +9,8 @@ import {
   reauthenticateWithCredential,
   updatePassword,
 } from 'firebase/auth';
-import { getUser, loginUser, registerUser } from '@config/api/user/user';
-import { auth } from '@config/firebase';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { getUser, loginUser, registerUser } from '@/_config/api/user/user';
+import { auth } from '@/_config/firebase';
 export const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
@@ -69,13 +68,11 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       const email = `${username}@mt.com`;
-
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const uid = userCredential.user.uid;
-
       const userData = await loginUser(uid);
 
-      setUserDT(userData.data);
+      setUserDT(userData?.data);
       setLoading(false);
       return { success: true };
     } catch (error) {
@@ -176,18 +173,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
   useEffect(() => {
-    setLoadingUser(true);
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        getUser(user.uid)
-          .then((res) => {
-            setUserDT(res.data.data);
-            setLoadingUser(false);
-          })
-          .catch((err) => {
-            console.error('Lỗi khi lấy thông tin người dùng:', err);
-            setLoadingUser(false);
-          });
+        setLoadingUser(true);
+        try {
+          const res = await getUser();
+          setUserDT(res.data.data);
+        } catch (err) {
+          console.error('Lỗi lấy user:', err);
+        } finally {
+          setLoadingUser(false);
+        }
       } else {
         setUserDT(null);
         setLoadingUser(false);

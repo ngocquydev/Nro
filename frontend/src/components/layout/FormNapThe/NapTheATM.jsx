@@ -6,7 +6,7 @@ import Table from 'react-bootstrap/Table';
 import CopyButton from '@components/common/CopyButton/CopyButton';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { auth } from '@config/firebase';
+import { auth } from '@/_config/firebase';
 function NapTheATM() {
   const { containerForm, wrapPer } = styles;
   const navigator = useNavigate();

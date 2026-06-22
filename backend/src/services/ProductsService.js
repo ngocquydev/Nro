@@ -47,6 +47,9 @@ const getAllProductsService = async (
     Product.find(query).sort(sort).skip(skip).limit(limitNum).lean(),
     Product.countDocuments(query),
   ]);
+  if (!products.length) {
+    throw new Error('Không có sản phẩm nào');
+  }
 
   return {
     products,

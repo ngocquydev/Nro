@@ -14,8 +14,8 @@ const registerUser = async (data) => {
   const res = await api.post('/user/register', data);
   return res.data;
 };
-const getUser = async (uid) => {
-  const res = await api.post(`/user/getUser`, { uid });
+const getUser = async () => {
+  const res = await api.post(`/user/getUser`);
   return res.data;
 };
 export { loginUser, registerUser, getUser };

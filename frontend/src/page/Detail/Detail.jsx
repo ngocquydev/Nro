@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import formatMoney from '@/util/formatMoney';
 import LoadingCommon from '@components/common/LoadingCommon/LoadingCommon';
 import { useSearchParams } from 'react-router-dom';
-import { getProductsById } from '@config/api/product/product';
+import { getProductsById } from '@/_config/api/product/product';
 
 function Detail() {
   const [searchParams] = useSearchParams();

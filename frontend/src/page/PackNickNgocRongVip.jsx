@@ -8,7 +8,7 @@ import { ProductsContext } from '@contexts/ProductsProvider';
 import formatMoney from '@/util/formatMoney';
 import ReactPaginateCommon from '@components/common/ReactPaginateCommon/ReactPaginateCommon';
 import LoadingCommon from '@components/common/LoadingCommon/LoadingCommon';
-import { getAllProducts } from '@config/api/product/product';
+import { getAllProducts } from '@/_config/api/product/product';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 function PackNickNgocRongVip() {
   const { dataPage, loading } = useContext(ProductsContext);

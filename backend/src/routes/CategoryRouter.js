@@ -2,8 +2,31 @@ const express = require('express');
 const router = express.Router();
 const categoryController = require('../controllers/CategoryController');
 const validateCategory = require('../middleware/validate-category');
-router.get('/getAll', categoryController.getAllCategory);
-router.get('/delete/:id', categoryController.deleteCategory);
-router.post('/create', validateCategory, categoryController.createCategory);
-router.put('/update/:id', validateCategory, categoryController.updateCategory);
+const { verifyRole, checkPermission } = require('../middleware/authMiddleware');
+router.get(
+  '/getAll',
+  verifyRole('user'),
+  checkPermission('read'),
+  categoryController.getAllCategory
+);
+router.get(
+  '/delete/:id',
+  verifyRole('admin'),
+  checkPermission('delete'),
+  categoryController.deleteCategory
+);
+router.post(
+  '/create',
+  verifyRole('admin'),
+  checkPermission('add'),
+  validateCategory,
+  categoryController.createCategory
+);
+router.put(
+  '/update/:id',
+  verifyRole('admin'),
+  checkPermission('update'),
+  validateCategory,
+  categoryController.updateCategory
+);
 module.exports = router;

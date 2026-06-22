@@ -1,4 +1,8 @@
-const { RechargeService, checkRechargeService } = require('../services/RechargesService');
+const {
+  RechargeService,
+  checkRechargeService,
+  getHistory,
+} = require('../services/RechargesService');
 const recharge = async (req, res) => {
   try {
     const partner_key = process.env.PARTNER_KEY;
@@ -9,7 +13,6 @@ const recharge = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Thiếu thông tin' });
     }
 
-    // data ở đây là object JSON sạch đã được return từ Service
     const data = await RechargeService(partner_key, PartnerID, {
       telco,
       code,
@@ -40,4 +43,13 @@ const checkRecharge = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-module.exports = { recharge, checkRecharge };
+const listHistory = async (req, res) => {
+  try {
+    const { userId, page, limit } = req.query;
+    const history = await getHistory(userId, parseInt(page) || 1, parseInt(limit) || 10);
+    res.status(200).json({ success: true, message: 'success', data: history });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+module.exports = { recharge, checkRecharge, listHistory };
