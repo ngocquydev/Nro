@@ -42,10 +42,7 @@ const routes = [
     path: '/member/password',
     element: <MemberLayout />,
   },
-  {
-    path: '/member/balance-history',
-    element: <MemberLayout />,
-  },
+
   {
     path: '/member/transaction',
     element: <MemberLayout />,

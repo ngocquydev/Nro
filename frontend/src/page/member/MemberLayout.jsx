@@ -3,7 +3,6 @@ import { Card, Col, Row, Nav, Container } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ChangePassword from './ChangePassword';
 import styles from './styles.module.css';
-import BalanceHistory from './BalanceHistory';
 import Transaction from './Transaction';
 import Purchase from './Purchase';
 import DashboardMember from './DashboardMember';
@@ -27,8 +26,6 @@ function MemberLayout() {
         return 'Tài Khoản';
       case '/member/password':
         return 'Thay đổi mật khẩu';
-      case 'member/balance-history':
-        return 'Biến Động Số Dư';
       default:
         return 'Tài khoản';
     }
@@ -39,8 +36,6 @@ function MemberLayout() {
         return <DashboardMember />;
       case '/member/password':
         return <ChangePassword />;
-      case '/member/balance-history':
-        return <BalanceHistory />;
       case '/member/transaction':
         return <Transaction />;
       case '/member/purchase':
@@ -91,23 +86,6 @@ function MemberLayout() {
                 >
                   <BsKey className="me-2" />
                   Đổi Mật Khẩu
-                </Nav.Link>
-
-                <Nav.Link
-                  as={Link}
-                  to="/member/balance-history"
-                  active={location.pathname === '/member/balance-history'}
-                  style={
-                    location.pathname === '/member/balance-history'
-                      ? {
-                          backgroundColor: 'red',
-                          color: '#fff',
-                        }
-                      : null
-                  }
-                >
-                  <BsCashStack className="me-2" />
-                  Biến Động Số Dư
                 </Nav.Link>
 
                 <Nav.Link
