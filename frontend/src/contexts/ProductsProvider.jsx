@@ -12,6 +12,7 @@ export const ProductsProvider = ({ children }) => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   useEffect(() => {
+    if (location.pathname !== '/') return;
     getAllCategory()
       .then((res) => {
         setData(res);
@@ -19,16 +20,16 @@ export const ProductsProvider = ({ children }) => {
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [location.pathname]);
   useEffect(() => {
     const page = parseInt(searchParams.get('page')) || 1;
     const server = parseInt(searchParams.get('server')) || 0;
     const planed = searchParams.get('planed') || '';
     const priceRange = searchParams.get('priceRange') || '';
     const slug = location.pathname.split('/')[1];
-    const keywords = ['member', 'nap-atm', 'login', 'register'];
+    const keywords = ['pack-nick-ngoc-rong-vip'];
     const isSlug = keywords.some((keyword) => slug.includes(keyword));
-    if (isSlug) return;
+    if (!isSlug) return;
     setLoading(true);
     getAllProducts(page, 8, slug, planed, server, priceRange)
       .then((res) => {

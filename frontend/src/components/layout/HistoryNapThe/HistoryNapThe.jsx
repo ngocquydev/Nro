@@ -6,7 +6,8 @@ import 'dayjs/locale/vi';
 import { getHistory } from '@config/api/recharges/recharges';
 import { AuthContext } from '@contexts/AuthProvider';
 import LoadingCommon from '@components/common/LoadingCommon/LoadingCommon';
-
+import { useLocation } from 'react-router-dom';
+import formatMoney from '@util/formatMoney';
 dayjs.extend(relativeTime);
 dayjs.locale('vi');
 
@@ -14,7 +15,12 @@ function HistoryNapThe() {
   const { userDT } = useContext(AuthContext);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
   useEffect(() => {
+    const slug = location.pathname;
+    const keywords = ['/member/transaction/card', 'nap-card'];
+    const isSlug = keywords.some((keyword) => slug.includes(keyword));
+    if (!isSlug) return;
     setLoading(true);
     if (userDT?._id) {
       getHistory({ userId: userDT._id })
@@ -27,7 +33,7 @@ function HistoryNapThe() {
           setLoading(false);
         });
     }
-  }, [userDT]);
+  }, [userDT, location.pathname]);
 
   const formatTime = (date) => dayjs(date).format('HH:mm DD/MM/YYYY');
 
@@ -67,7 +73,7 @@ function HistoryNapThe() {
                   <tr key={item._id}>
                     <td>{index + 1}</td>
                     <td>{item.telco}</td>
-                    <td>{Number(item.amount).toLocaleString()} VNĐ</td>
+                    <td>{formatMoney(Number(item.amount.$numberDecimal))}</td>
                     <td>{item.serial}</td>
                     <td>{item.code}</td>
                     <td>{renderStatus(+item.status)}</td>

@@ -1,4 +1,4 @@
-import { Container, Button, Form, InputGroup } from 'react-bootstrap';
+import { Container, Button, Form, InputGroup, Card, Badge } from 'react-bootstrap';
 import styles from './styles.module.css';
 import HistoryNapThe from '../HistoryNapThe/HistoryNapThe';
 import Breadcrumbs from '@components/common/Breadcrumbs/Breadcrumbs';
@@ -8,10 +8,29 @@ import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import { auth } from '@/_config/firebase';
 import { AtmPaymentContext } from '@contexts/AtmPaymentProvider';
+import LoadingCommon from '@components/common/LoadingCommon/LoadingCommon';
+import formatMoney from '@/util/formatMoney';
+import { format } from 'date-fns';
 function NapTheATM() {
   const { containerForm, wrapPer, customInput } = styles;
   const navigator = useNavigate();
-  const { formik, url } = useContext(AtmPaymentContext);
+  const { formik, url, data, loading } = useContext(AtmPaymentContext);
+  const renderStatus = (status) => {
+    switch (status) {
+      case 1:
+        return <Badge bg="success">Thành công</Badge>;
+      case 3:
+        return <Badge bg="danger">Thất bại</Badge>;
+      case 99:
+        return (
+          <Badge bg="warning" text="dark">
+            Đang xử lý
+          </Badge>
+        );
+      default:
+        return <Badge bg="secondary">Unknown</Badge>;
+    }
+  };
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (!user) navigator('/login');
@@ -81,8 +100,7 @@ function NapTheATM() {
             </span>
             <br />
             <span>
-              Bước 2 : <span className="text-danger">QUÉT mã QR hoặc Copy chính xác</span> nội dung
-              chuyển tiền và stk( SAI ND KO CỘNG TIỀN)
+              Bước 2 : <span className="text-danger fw-bold">Quét mã QR</span>
             </span>
             <br />
             <span>
@@ -91,7 +109,7 @@ function NapTheATM() {
             <br />
             <span>
               Mỗi lần nạp khách hàng vui lòng
-              <span className="text-danger">tạo đơn nạp mới</span>
+              <span className="text-danger"> tạo đơn nạp mới </span>
               để lấy STK và nội dung mới Lưu ý :
               <strong className="text-danger">
                 Hệ thống sẽ hủy giao dịch nếu không nhận được thanh toán trong vòng 15 phut
@@ -99,7 +117,61 @@ function NapTheATM() {
             </span>
           </div>
         </div>
-        <HistoryNapThe />
+        <Container className="py-4">
+          <Card className="shadow-sm">
+            <Card.Header className="bg-primary text-white">
+              <h5 className="mb-0">Lịch sử giao dịch ATM/Ngân hàng</h5>
+            </Card.Header>
+            <Card.Body className="p-0">
+              <Table hover responsive className="mb-0">
+                <thead className="table-light">
+                  <tr>
+                    <th>#</th>
+                    <th>Mã giao dịch</th>
+                    <th>Số tiền</th>
+                    <th>Ngân hàng</th>
+                    <th>Trạng thái</th>
+                    <th>Thời gian</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan="6" className="text-center">
+                        <LoadingCommon />
+                      </td>
+                    </tr>
+                  ) : data.data?.length > 0 ? (
+                    data.data.map((item, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>
+                          <code className="text-primary">{item.id || '---'}</code>
+                        </td>
+                        <td className="fw-bold">
+                          {formatMoney(item.amount.$numberDecimal || 0)} VNĐ
+                        </td>
+                        <td>{item.gateway || 'N/A'}</td>
+                        <td>{renderStatus(item.status)}</td>
+                        <td>
+                          {item.transactionDate
+                            ? format(new Date(item.transactionDate), 'dd/MM/yyyy HH:mm:ss')
+                            : '---'}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="6" className="text-center">
+                        Chưa có lịch sử giao dịch
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card>
+        </Container>
       </Container>
     </div>
   );

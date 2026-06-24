@@ -12,7 +12,7 @@ export const ToastMessgeProvider = ({ children }) => {
   return (
     <ToastMessgeContext.Provider value={value}>
       {children}
-      <ToastContainer />
+      <ToastContainer autoClose={2000} />
     </ToastMessgeContext.Provider>
   );
 };

@@ -44,7 +44,11 @@ const routes = [
   },
 
   {
-    path: '/member/transaction',
+    path: '/member/transaction/card',
+    element: <MemberLayout />,
+  },
+  {
+    path: '/member/transaction/atm',
     element: <MemberLayout />,
   },
   {
@@ -68,13 +72,4 @@ const routes = [
     element: <Test />,
   },
 ];
-const routesAdmin = [
-  // { path: '/admin', element: <AdminHome /> },
-  // { path: '/admin/products/add', element: <CreateProducts /> },
-  // { path: '/admin/products/add/Detail', element: <CreateDetailProducts /> },
-  // {
-  //     path: '/admin/products/add/DanhMucSanPham',
-  //     element: <CreateDanhMucSanPham />,
-  // },
-];
-export { routes, routesAdmin };
+export { routes };

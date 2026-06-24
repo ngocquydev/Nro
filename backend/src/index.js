@@ -3,7 +3,10 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const admin = require('firebase-admin');
-
+const { getTransactionDetails } = require('./services/atmService');
+const AtmModel = require('./models/AtmModel');
+const User = require('./models/UserModel');
+const cron = require('node-cron');
 // Load env
 dotenv.config({ path: '../.env' });
 
@@ -23,16 +26,13 @@ try {
 
 async function startServer() {
   try {
-    // 1. Kết nối DB trước
     await connectDB();
 
     const app = express();
-
-    // 2. Cấu hình CORS - Quan trọng để React không bị chặn
     app.use(
       cors({
         origin: 'http://localhost:5173',
-        credentials: true, // Bật nếu bạn dùng cookies/session/JWT
+        credentials: true,
       })
     );
 
@@ -41,8 +41,53 @@ async function startServer() {
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
     app.use(express.raw({ type: '*/*' }));
-    routes(app);
+    let isSyncing = false;
+    setInterval(async () => {
+      if (isSyncing) return;
+      isSyncing = true;
 
+      try {
+        const now = new Date();
+        const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+
+        // 1. Dọn dẹp đơn cũ
+        await AtmModel.updateMany(
+          { status: 99, createdAt: { $lt: fiveMinutesAgo } },
+          { $set: { status: 3 } }
+        );
+
+        // 2. Tìm đơn đang xử lý
+        const activeOrders = await AtmModel.find({
+          status: 99,
+          createdAt: { $gte: fiveMinutesAgo },
+        });
+
+        // 3. Xử lý song song bằng Promise.all (Nhanh hơn nhiều so với vòng lặp)
+        await Promise.all(
+          activeOrders.map(async (order) => {
+            const valueAsNumber = parseFloat(order.amount.toString());
+            try {
+              const transaction = await getTransactionDetails(order.id);
+              if (transaction) {
+                // Cập nhật trạng thái đơn
+                order.status = 1;
+                await order.save();
+
+                await User.updateOne({ _id: order.userId }, { $inc: { atm: valueAsNumber } });
+              }
+            } catch (innerErr) {
+              console.error(`Lỗi xử lý đơn ${order._id}:`, innerErr);
+            }
+          })
+        );
+      } catch (err) {
+        console.error('Lỗi quét đơn:', err);
+      } finally {
+        isSyncing = false;
+      }
+    }, 5000);
+
+    routes(app);
     app.use((req, res, next) => {
       res.status(404).json({
         success: false,

@@ -9,6 +9,7 @@ import DashboardMember from './DashboardMember';
 import Breadcrumbs from '@components/common/Breadcrumbs/Breadcrumbs';
 import { auth } from '@/_config/firebase';
 import { useEffect } from 'react';
+import HistoryNapATM from './HistoryNapATM';
 function MemberLayout() {
   const location = useLocation();
   const { memberSidebar } = styles;
@@ -36,8 +37,10 @@ function MemberLayout() {
         return <DashboardMember />;
       case '/member/password':
         return <ChangePassword />;
-      case '/member/transaction':
+      case '/member/transaction/card':
         return <Transaction />;
+      case '/member/transaction/atm':
+        return <HistoryNapATM />;
       case '/member/purchase':
         return <Purchase />;
       default:
@@ -90,10 +93,10 @@ function MemberLayout() {
 
                 <Nav.Link
                   as={Link}
-                  to="/member/transaction"
-                  active={location.pathname === '/member/transaction'}
+                  to="/member/transaction/card"
+                  active={location.pathname === '/member/transaction/card'}
                   style={
-                    location.pathname === '/member/transaction'
+                    location.pathname === '/member/transaction/card'
                       ? {
                           backgroundColor: 'red',
                           color: '#fff',
@@ -102,7 +105,23 @@ function MemberLayout() {
                   }
                 >
                   <BsClockHistory className="me-2" />
-                  Lịch Sử Nạp Tiền
+                  Lịch Sử Nạp Tiền Card
+                </Nav.Link>
+                <Nav.Link
+                  as={Link}
+                  to="/member/transaction/atm"
+                  active={location.pathname === '/member/transaction/atm'}
+                  style={
+                    location.pathname === '/member/transaction/atm'
+                      ? {
+                          backgroundColor: 'red',
+                          color: '#fff',
+                        }
+                      : null
+                  }
+                >
+                  <BsClockHistory className="me-2" />
+                  Lịch Sử Nạp Tiền ATM
                 </Nav.Link>
 
                 <Nav.Link

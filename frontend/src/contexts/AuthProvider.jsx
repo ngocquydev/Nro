@@ -11,11 +11,13 @@ import {
 } from 'firebase/auth';
 import { getUser, loginUser, registerUser } from '@/_config/api/user/user';
 import { auth } from '@/_config/firebase';
+import { useLocation } from 'react-router-dom';
 export const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [loadingUser, setLoadingUser] = useState(false);
   const [userDT, setUserDT] = useState([]);
+  const localtion = useLocation();
   const authRegisterUser = async ({ username, password, phone }) => {
     setLoading(true);
     let firebaseUser = null;
@@ -51,7 +53,6 @@ export const AuthProvider = ({ children }) => {
           console.error('Không thể xóa user sau lỗi BE:', deleteError);
         }
       }
-
       setLoading(false);
 
       let errorMsg = error.message || 'Đã có lỗi xảy ra, vui lòng thử lại.';
@@ -191,7 +192,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [localtion]);
   const value = {
     authRegisterUser,
     loading,

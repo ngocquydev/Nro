@@ -9,4 +9,10 @@ const getQrCode = async (amount, desc) => {
   });
   return res.data;
 };
-export { getQrCode };
+const getHistoryATM = async (userId) => {
+  const res = await api.get('/atm/listHistoryATM', {
+    params: { userId },
+  });
+  return res.data;
+};
+export { getQrCode, getHistoryATM };

@@ -10,7 +10,7 @@ const rechargesSchema = new mongoose.Schema(
     desc: { type: String },
     type: { type: String },
     amount: {
-      type: Number,
+      type: mongoose.Schema.Types.Decimal128,
       required: true,
     },
     userId: {
