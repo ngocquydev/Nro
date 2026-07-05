@@ -3,17 +3,16 @@ import TextInfoNickGame from '@components/layout/TextInfoNickGame/TextInfoNickGa
 import Breadcrumbs from '@components/common/Breadcrumbs/Breadcrumbs';
 import ProductFilterForm from '@components/common/ProductFilterForm/ProductFilterForm';
 import ItemsGame from '@components/layout/ItemsGame/ItemsGame';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { ProductsContext } from '@contexts/ProductsProvider';
 import formatMoney from '@/util/formatMoney';
 import ReactPaginateCommon from '@components/common/ReactPaginateCommon/ReactPaginateCommon';
 import LoadingCommon from '@components/common/LoadingCommon/LoadingCommon';
-import { getAllProducts } from '@/_config/api/product/product';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 function PackNickNgocRongVip() {
   const { dataPage, loading } = useContext(ProductsContext);
+  console.log('dataPage', dataPage);
   const navigate = useNavigate();
-
   const handlePageClick = async (values) => {
     // 1. Kiểm tra: nếu giá trị chọn không hợp lệ, thoát ngay (chặn dấu ...)
     if (values.selected === undefined || values.selected === null || isNaN(values.selected)) {
@@ -33,6 +32,16 @@ function PackNickNgocRongVip() {
       <ProductFilterForm />
 
       <Row className="mt-3 mb-3">
+        {dataPage.success === false && !loading && (
+          <Col className="py-5 text-center">
+            <h4 className="text-danger text-uppercase fw-bold">Không có sản phẩm nào</h4>
+            <div>
+              <Link to="/" className="btn btn-primary mt-3">
+                Quay lại trang chủ
+              </Link>
+            </div>
+          </Col>
+        )}
         {loading ? (
           <Col className="py-5 text-center">
             <LoadingCommon loading={loading} />
@@ -45,7 +54,15 @@ function PackNickNgocRongVip() {
                 src={it?.img?.[0] || ''}
                 card={formatMoney(it.Card?.$numberDecimal) || 0}
                 atm={formatMoney(it.ATM?.$numberDecimal) || 0}
-                planed={it.planed}
+                planed={
+                  it.planed === 'TraiDat'
+                    ? 'Trái Đất'
+                    : it.planed === 'Xayda'
+                      ? 'Xayda'
+                      : it.planed === 'Namec'
+                        ? 'Namec'
+                        : ''
+                }
                 server={it.server}
                 category={it.register}
               />

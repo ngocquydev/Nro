@@ -7,7 +7,7 @@ import { ProductsContext } from '@contexts/ProductsProvider';
 
 function ProductFilterForm() {
   const { selectBox, inputText } = styles;
-  const { setDataPage, dataPage } = useContext(ProductsContext);
+  const { setDataPage } = useContext(ProductsContext);
   const [values, setValues] = useState({
     page: 1,
     limit: 8,
@@ -91,7 +91,7 @@ function ProductFilterForm() {
 
   const planetFilters = [
     { label: 'Lọc theo hành tinh', value: '' },
-    { label: 'Trái đất', value: 'traidat' },
+    { label: 'Trái đất', value: 'TraiDat' },
     { label: 'Namec', value: 'Namec' },
     { label: 'Xayda', value: 'Xayda' },
   ];

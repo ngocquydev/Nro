@@ -1,5 +1,5 @@
 const Product = require('../models/ProductsModel');
-
+const Category = require('../models/CategoryModel');
 const getAllProductsService = async (
   page = 1,
   limit = 10,
@@ -47,9 +47,6 @@ const getAllProductsService = async (
     Product.find(query).sort(sort).skip(skip).limit(limitNum).lean(),
     Product.countDocuments(query),
   ]);
-  if (!products.length) {
-    throw new Error('Không có sản phẩm nào');
-  }
 
   return {
     products,
@@ -72,6 +69,10 @@ const getById = async (id) => {
 const createProducts = async (body) => {
   try {
     const product = new Product(body);
+    const Castegory = await Category.updateOne(
+      { _id: body.categoryId },
+      { $inc: { quantitySold: 1 } }
+    );
     await product.save();
     return product;
   } catch (error) {

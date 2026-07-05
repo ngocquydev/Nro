@@ -8,8 +8,10 @@ const getQrCode = async (req, res) => {
       bank: process.env.BANK,
       acc: process.env.ACC,
       amount: amount,
-      des: desc || 'Thanh toan don hang DH04151201',
+      des: desc,
       template: process.env.TEMPLATE,
+      showinfo: process.env.SHOWINFO,
+      holder: process.env.HOLDER,
     });
     const data = await getqrCode(params);
     return res.status(200).json({ status: 'OK', data: data });

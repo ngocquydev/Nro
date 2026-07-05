@@ -2,13 +2,39 @@ const Category = require('../models/CategoryModel');
 
 const getAllCategory = async () => {
   try {
-    const categories = await Category.find();
-    if (categories.length === 0) return [];
-    const filterCategory = categories.filter((cat) => cat.title);
-    if (!filterCategory.length) {
-      throw new Error('Không có danh mục nào');
-    }
-    return { data: categories, listTitle: filterCategory.map((cat) => cat.title) };
+    const result = await Category.aggregate([
+      { $match: { isDeleted: { $ne: true } } },
+
+      {
+        $group: {
+          _id: '$title',
+          Category: { $push: '$$ROOT' },
+        },
+      },
+      { $sort: { _id: 1 } },
+      {
+        $project: {
+          title: '$_id',
+          _id: 0,
+          Category: {
+            $map: {
+              input: '$Category',
+              as: 'item',
+              in: {
+                name: '$$item.name',
+                slug: '$$item.slug',
+                bgUrl: '$$item.bgUrl',
+                quantitySold: '$$item.quantitySold',
+                desc: '$$item.desc',
+              },
+            },
+          },
+        },
+      },
+    ]);
+    if (!result) return [];
+
+    return result;
   } catch (error) {
     throw error;
   }
@@ -19,23 +45,19 @@ const createCategory = async (categoryData) => {
     const checkName = await Category.findOne({ name });
     const checkSlug = await Category.findOne({ slug });
     const checkBgUrl = await Category.findOne({ bgUrl });
-    const checkTitle = await Category.findOne({ title });
     if (checkName) {
-      throw new Error('Name đã tồn tại');
+      return { SUCCESS: false, message: 'Tên danh mục đã tồn tại' };
     }
     if (checkSlug) {
-      throw new Error('Slug đã tồn tại');
+      return { SUCCESS: false, message: 'Slug đã tồn tại' };
     }
     if (checkBgUrl) {
-      throw new Error('Background URL đã tồn tại');
-    }
-    if (checkTitle) {
-      throw new Error('Title đã tồn tại');
+      return { SUCCESS: false, message: 'BgUrl đã tồn tại' };
     }
 
     const category = new Category({ name, desc, slug, bgUrl, title });
     await category.save();
-    return category;
+    return { SUCCESS: true, data: category };
   } catch (error) {
     throw error;
   }

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const categoryController = require('../controllers/CategoryController');
-const validateCategory = require('../middleware/validate-category');
+const validateCategory = require('../validation/validate-category');
 const { verifyRole, checkPermission } = require('../middleware/authMiddleware');
 router.get(
   '/getAll',
@@ -16,8 +16,8 @@ router.get(
 );
 router.post(
   '/create',
-  verifyRole('admin'),
-  checkPermission('add'),
+  // verifyRole('admin'),
+  // checkPermission('add'),
   validateCategory,
   categoryController.createCategory
 );

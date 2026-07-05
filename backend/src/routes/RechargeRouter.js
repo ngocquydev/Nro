@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const validateRecharge = require('../middleware/validate-recharges');
+const validateRecharge = require('../validation/validate-recharges');
 const { verifyRole, checkPermission } = require('../middleware/authMiddleware');
 const upload = multer();
 const { recharge, checkRecharge, listHistory } = require('../controllers/RechargeController');

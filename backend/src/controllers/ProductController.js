@@ -1,5 +1,4 @@
 const productService = require('../services/ProductsService');
-
 const getAllProducts = async (req, res) => {
   try {
     const { page, limit, slug, priceRange, server, planed } = req.query;
@@ -28,6 +27,7 @@ const getAllProducts = async (req, res) => {
 const getById = async (req, res) => {
   try {
     const product = await productService.getById(req.params.id);
+    const { _id, planed, server, register, img, desc, ATM, Card, slug } = product;
     if (!product) {
       return res.status(404).json({
         success: false,
@@ -36,7 +36,7 @@ const getById = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      data: product,
+      data: { _id, planed, server, register, img, desc, ATM, Card, slug },
     });
   } catch (error) {
     return res.status(500).json({
@@ -49,15 +49,13 @@ const getById = async (req, res) => {
 const createProducts = async (req, res) => {
   try {
     const product = await productService.createProducts(req.body);
-    return res.status(201).json({ success: true, data: product });
+    return res.status(201).json({ success: true, message: 'Tạo sản phẩm thành công' });
   } catch (error) {
-    // Log lỗi ra terminal để bạn kiểm tra ngay
     console.log('CHI TIẾT LỖI MONGODB:', error);
 
     return res.status(500).json({
       success: false,
       message: 'Không thể tạo sản phẩm',
-      // Nếu là lỗi validation, nó sẽ hiện rõ thiếu trường nào
       details: error.message,
     });
   }

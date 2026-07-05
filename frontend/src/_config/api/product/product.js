@@ -22,7 +22,7 @@ const getAllProducts = async (
   return res.data;
 };
 const getProductsById = async (id) => {
-  const res = await api.get(`/product/getById/${id}`);
+  const res = await api.get(`/product/${id}`);
   return res.data;
 };
 export { getAllCategory, getAllProducts, getProductsById };

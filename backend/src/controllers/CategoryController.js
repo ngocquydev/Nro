@@ -25,6 +25,12 @@ const createCategory = async (req, res) => {
       });
     }
     const category = await categoryService.createCategory({ name, desc, slug, bgUrl, title });
+    if (category.message) {
+      return res.status(400).json({
+        success: false,
+        message: category.message,
+      });
+    }
     return res.status(201).json({
       success: true,
       data: category,
