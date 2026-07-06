@@ -43,7 +43,6 @@ const getTransactionDetails = async (transactionId) => {
 };
 const getHistory = async (userId) => {
   try {
-    // Ép kiểu userId về ObjectId và chỉ chọn các trường cần thiết
     const list = await AtmModel.find({
       userId,
     })

@@ -1,4 +1,5 @@
 const productService = require('../services/ProductsService');
+
 const getAllProducts = async (req, res) => {
   try {
     const { page, limit, slug, priceRange, server, planed } = req.query;
@@ -49,6 +50,9 @@ const getById = async (req, res) => {
 const createProducts = async (req, res) => {
   try {
     const product = await productService.createProducts(req.body);
+    if (!product.success) {
+      return res.status(400).json(product);
+    }
     return res.status(201).json({ success: true, message: 'Tạo sản phẩm thành công' });
   } catch (error) {
     console.log('CHI TIẾT LỖI MONGODB:', error);

@@ -11,14 +11,18 @@ export const ProductsProvider = ({ children }) => {
   const [dataPage, setDataPage] = useState({});
   const [searchParams] = useSearchParams();
   const location = useLocation();
+  const [loadingHome, setLoadingHome] = useState(false);
   useEffect(() => {
     if (location.pathname !== '/') return;
+    setLoadingHome(true);
     getAllCategory()
       .then((res) => {
         setData(res);
+        setLoadingHome(false);
       })
       .catch((err) => {
         console.error(err);
+        setLoadingHome(false);
       });
   }, [location.pathname]);
   useEffect(() => {

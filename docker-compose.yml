@@ -4,18 +4,18 @@ services:
     image: mongo:latest
     container_name: mongodb_nro
     ports:
-      - "27017:27017"
+      - '27017:27017'
+    command: ['--replSet', 'rs0', '--bind_ip_all']
     volumes:
       - mongo_data:/data/db
 
   backend:
     build: ./backend
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - NODE_ENV=development
-      # Thay host.docker.internal bằng tên service mongodb
-      - MONGO_URI=mongodb://127.0.0.1:27017/GameNro
+      - MONGO_URL=mongodb://127.0.0.1:27017/GameNro?replicaSet=rs0&directConnection=true
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
@@ -23,16 +23,16 @@ services:
       - mongodb
 
   frontend:
-    build: ./frontend 
+    build: ./frontend
     ports:
-      - "3001:5173" 
+      - '3001:5173'
     env_file:
-      - ./.env 
+      - ./.env
     environment:
       - NODE_ENV=development
     volumes:
       - ./frontend:/usr/src/app
-      - /usr/src/app/node_modules 
+      - /usr/src/app/node_modules
       - ./.env:/usr/src/app/.env
     stdin_open: true
     tty: true

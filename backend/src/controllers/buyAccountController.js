@@ -2,8 +2,8 @@ const buyAccountService = require('../services/BuyAccountService');
 
 const buyAccountController = async (req, res) => {
   try {
-    const { productId, paymentMethod } = req.body;
-    const result = await buyAccountService.buyAccountService(productId, paymentMethod);
+    const { userId, productId, paymentMethod } = req.body;
+    const result = await buyAccountService.buyAccountService(userId, productId, paymentMethod);
     return res.status(200).json({
       success: true,
       data: result,

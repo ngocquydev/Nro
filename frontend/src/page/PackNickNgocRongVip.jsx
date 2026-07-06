@@ -46,6 +46,15 @@ function PackNickNgocRongVip() {
           <Col className="py-5 text-center">
             <LoadingCommon loading={loading} />
           </Col>
+        ) : dataPage.data?.length === 0 ? (
+          <Col className="py-5 text-center">
+            <h4 className="text-danger text-uppercase fw-bold">Không có sản phẩm nào</h4>
+            <div>
+              <Link to="/" className="btn btn-primary mt-3">
+                Quay lại trang chủ
+              </Link>
+            </div>
+          </Col>
         ) : (
           dataPage.data?.map((it) => (
             <Col xs={12} md={6} lg={3} className="mb-3" key={it._id}>

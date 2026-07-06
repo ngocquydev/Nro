@@ -68,13 +68,19 @@ const getById = async (id) => {
 };
 const createProducts = async (body) => {
   try {
+    const checkCategory = await Category.findById(body.categoryId);
+
+    if (!checkCategory) {
+      return {
+        success: false,
+        message: 'Danh mục không tồn tại',
+      };
+    }
     const product = new Product(body);
-    const Castegory = await Category.updateOne(
-      { _id: body.categoryId },
-      { $inc: { quantitySold: 1 } }
-    );
     await product.save();
-    return product;
+    await Category.updateOne({ _id: body.categoryId }, { $inc: { quantitySold: 1 } });
+
+    return { success: true, message: 'Tạo sản phẩm thành công' };
   } catch (error) {
     throw error;
   }
