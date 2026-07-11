@@ -8,14 +8,14 @@ import { getProductsById } from '@/_config/api/product/product';
 
 function Detail() {
   const [searchParams] = useSearchParams();
-  const [data, setData] = useState(null); // Khởi tạo null thay vì [] để check tồn tại dễ hơn
+  const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const id = searchParams.get('id');
 
   useEffect(() => {
     if (!id) return;
 
-    let isMounted = true; // Biến cờ để tránh lỗi setState khi component unmount
+    let isMounted = true;
     setIsLoading(true);
 
     getProductsById(id)

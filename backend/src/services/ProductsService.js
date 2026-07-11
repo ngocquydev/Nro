@@ -63,8 +63,19 @@ const getAllProductsService = async (
   };
 };
 const getById = async (id) => {
-  const product = Product.findById(id);
-  return product;
+  const product = await Product.findById(id);
+  if (!product) return null;
+  return {
+    _id: product._id,
+    ATM: product.ATM,
+    Card: product.Card,
+    planed: product.planed,
+    server: product.server,
+    register: product.register,
+    desc: product.desc,
+    img: product.img,
+    slug: product.slug,
+  };
 };
 const createProducts = async (body) => {
   try {

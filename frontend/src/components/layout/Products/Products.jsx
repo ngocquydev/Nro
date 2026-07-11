@@ -9,6 +9,7 @@ import 'react-loading-skeleton/dist/skeleton.css'; // Đừng quên import CSS c
 
 function Products({ data, categoryTitle }) {
   const { containerItem, boxImg, title, boxContent, subContent, boxIcon, boxHeart } = styles;
+
   if (!data || data.length === 0) {
     return (
       <Row xs={1} md={4} className="g-4">

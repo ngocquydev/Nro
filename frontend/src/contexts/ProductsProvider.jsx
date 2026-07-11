@@ -1,8 +1,9 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { getAllCategory } from '@/_config/api/category/category';
 import { getAllProducts } from '@/_config/api/product/product';
 import { useLocation, useSearchParams } from 'react-router-dom';
+import { BuyAccountContext } from './BuyAccountProvider';
 export const ProductsContext = createContext(null);
 
 export const ProductsProvider = ({ children }) => {
@@ -12,6 +13,7 @@ export const ProductsProvider = ({ children }) => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const [loadingHome, setLoadingHome] = useState(false);
+  const { idBuy } = useContext(BuyAccountContext);
   useEffect(() => {
     if (location.pathname !== '/') return;
     setLoadingHome(true);
@@ -25,6 +27,7 @@ export const ProductsProvider = ({ children }) => {
         setLoadingHome(false);
       });
   }, [location.pathname]);
+
   useEffect(() => {
     const page = parseInt(searchParams.get('page')) || 1;
     const server = parseInt(searchParams.get('server')) || 0;
@@ -45,6 +48,6 @@ export const ProductsProvider = ({ children }) => {
         setLoading(false);
       });
   }, [searchParams, location]);
-  const value = { loading, data, dataPage, setDataPage };
+  const value = { loading, data, dataPage, setDataPage, loadingHome };
   return <ProductsContext.Provider value={value}>{children}</ProductsContext.Provider>;
 };

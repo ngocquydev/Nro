@@ -41,8 +41,8 @@ async function startServer() {
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
     app.use(express.raw({ type: '*/*' }));
-    let isSyncing = false;
     setInterval(async () => {
+      let isSyncing = false;
       if (isSyncing) return;
       isSyncing = true;
 
@@ -50,7 +50,6 @@ async function startServer() {
         const now = new Date();
         const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
 
-        // 1. Dọn dẹp đơn cũ
         await AtmModel.updateMany(
           { status: 99, createdAt: { $lt: fiveMinutesAgo } },
           { $set: { status: 3 } }
@@ -76,7 +75,7 @@ async function startServer() {
                 await User.updateOne({ _id: order.userId }, { $inc: { atm: valueAsNumber } });
               }
             } catch (innerErr) {
-              console.error(`Lỗi xử lý đơn ${order._id}:`, innerErr);
+              console.error(`Lỗi xử lý nạp thẻ ${order._id}:`, innerErr);
             }
           })
         );
@@ -84,6 +83,7 @@ async function startServer() {
         console.error('Lỗi quét đơn:', err);
       } finally {
         isSyncing = false;
+        clearInterval();
       }
     }, 5000);
 

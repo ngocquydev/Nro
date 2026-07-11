@@ -7,32 +7,35 @@ import { AuthProvider } from '@contexts/AuthProvider.jsx';
 import { ProductsProvider } from '@contexts/ProductsProvider.jsx';
 import { RechagresProvider } from '@contexts/RechagresProvider.jsx';
 import { AtmPaymentProvider } from '@contexts/AtmPaymentProvider.jsx';
+import { BuyAccountProvider } from '@contexts/BuyAccountProvider.jsx';
 function App() {
   return (
     <ToastMessgeProvider>
       <AuthProvider>
-        <ProductsProvider>
-          <AtmPaymentProvider>
-            <RechagresProvider>
-              <Routes>
-                {/* USER ROUTES */}
-                {routes.map((route, index) => (
-                  <Route
-                    key={index}
-                    path={route.path}
-                    element={
-                      <>
-                        <Header />
-                        {route.element}
-                        <Footer />
-                      </>
-                    }
-                  />
-                ))}
-              </Routes>
-            </RechagresProvider>
-          </AtmPaymentProvider>
-        </ProductsProvider>
+        <BuyAccountProvider>
+          <ProductsProvider>
+            <AtmPaymentProvider>
+              <RechagresProvider>
+                <Routes>
+                  {/* USER ROUTES */}
+                  {routes.map((route, index) => (
+                    <Route
+                      key={index}
+                      path={route.path}
+                      element={
+                        <>
+                          <Header />
+                          {route.element}
+                          <Footer />
+                        </>
+                      }
+                    />
+                  ))}
+                </Routes>
+              </RechagresProvider>
+            </AtmPaymentProvider>
+          </ProductsProvider>
+        </BuyAccountProvider>
       </AuthProvider>
     </ToastMessgeProvider>
   );

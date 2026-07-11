@@ -1,23 +1,35 @@
 const AccountModel = require('../models/AccountModel');
+const ProductModel = require('../models/ProductsModel');
 const { encrypt, decrypt } = require('../util/cryptoAccount');
 const create = async (username, password, productId) => {
   try {
-    const encryptedPassword = encrypt(password);
-    const checkProductId = await AccountModel.findOne({ productId });
-    if (checkProductId) {
+    const existingAccount = await AccountModel.findOne({ productId });
+    if (existingAccount) {
       return {
         success: false,
         message: 'ProductId already exists',
       };
     }
-    const newAccount = new AccountModel({
-      username,
+    const product = await ProductModel.findById(productId);
+    if (!product) {
+      return { success: false, message: 'Product not found' };
+    }
+    const encryptedPassword = encrypt(password);
+    const newAccount = await AccountModel.create({
+      username: username,
       password: encryptedPassword,
-      productId,
+      productId: product._id,
     });
-    const savedAccount = await newAccount.save();
-    return savedAccount;
+
+    return {
+      data: {
+        username: newAccount.username,
+        password: encryptedPassword,
+        productId,
+      },
+    };
   } catch (error) {
+    console.error('Create account error:', error);
     throw error;
   }
 };

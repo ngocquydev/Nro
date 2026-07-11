@@ -7,7 +7,7 @@ const createAccount = async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
     const newAccount = await AccountService.create(username, password, productId);
-    if (!newAccount.success) {
+    if (newAccount.success === false) {
       return res.status(400).json({ error: newAccount.message });
     }
     return res.status(201).json(newAccount);
