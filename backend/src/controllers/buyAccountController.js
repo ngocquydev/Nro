@@ -28,17 +28,24 @@ const buyAccountController = async (req, res) => {
 const getHistoryController = async (req, res) => {
   try {
     const { userId } = req.params;
-    if (!userId)
-      return res.status.json({
+    if (!userId) {
+      return res.status(400).json({
         success: false,
         message: 'Chưa có userId',
       });
+    }
+
     const list = await buyAccountService.getHistoryService(userId);
-    if (list.message) {
+    if (list && list.success === false) {
       return res.status(400).json(list);
     }
-    return res.status(200).json(list);
+    return res.status(200).json({
+      success: true,
+      message: 'Lấy lịch sử thành công',
+      data: list,
+    });
   } catch (error) {
+    console.error('Lỗi controller:', error);
     return res.status(500).json({
       success: false,
       message: 'Lỗi server',

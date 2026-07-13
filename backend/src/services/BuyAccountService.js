@@ -93,14 +93,28 @@ const buyAccountService = async (userId, productId, paymentMethod) => {
 const getHistoryService = async (userId) => {
   try {
     const list = await HistoryBuyModel.find({ userId: userId }).sort({ createdAt: -1 });
-    if (!list)
+    if (!list || list.length === 0) {
+      return { message: 'Not found' };
+    }
+
+    const processedList = list.map((item) => {
+      const obj = item.toObject();
+      if (obj.productInfo?.accountData?.password) {
+        obj.productInfo.accountData.password = decrypt(obj.productInfo.accountData.password);
+      }
       return {
-        message: 'Not found',
+        productInfo: obj.productInfo,
+        userId: obj.userId,
+        productId: obj.productId,
+        createdAt: obj.createdAt,
+        status: obj.status,
+        paymentMethod: obj.paymentMethod,
+        price: obj.price?.$numberDecimal,
       };
-    return list;
+    });
+    return { list: processedList };
   } catch (error) {
     throw error;
   }
 };
-
 module.exports = { buyAccountService, getHistoryService };

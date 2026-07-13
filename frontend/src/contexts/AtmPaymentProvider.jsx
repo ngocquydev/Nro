@@ -34,6 +34,7 @@ export const AtmPaymentProvider = ({ children }) => {
     },
   });
   useEffect(() => {
+    if (!userDT._id) return;
     setLoading(true);
     const fetchData = async () => {
       try {
@@ -49,6 +50,7 @@ export const AtmPaymentProvider = ({ children }) => {
       fetchData();
     }
   }, [userDT?._id, location]);
+
   const value = { formik, url, setUrl, data, loading };
   return <AtmPaymentContext.Provider value={value}>{children}</AtmPaymentContext.Provider>;
 };

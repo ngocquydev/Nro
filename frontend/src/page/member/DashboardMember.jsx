@@ -4,16 +4,10 @@ import { BsPersonBadge, BsWallet2, BsPerson, BsGift, BsPhone } from 'react-icons
 import styles from './styles.module.css';
 import { AuthContext } from '@contexts/AuthProvider';
 import LoadingCommon from '@components/common/LoadingCommon/LoadingCommon';
+import formatMoney from '@/util/formatMoney';
 
 function DashboardMember() {
   const { userDT, loadingUser } = useContext(AuthContext);
-  const formatVND = (amount) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-    }).format(amount || 0);
-  };
-
   const stats = [
     {
       title: 'ID tài khoản',
@@ -37,15 +31,17 @@ function DashboardMember() {
       bg: styles.bgLightInfo,
     },
     {
+      type: 'money',
       title: 'Số dư Card',
-      value: formatVND(userDT?.card?.$numberDecimal),
+      value: formatMoney(userDT?.card?.$numberDecimal),
       icon: <BsWallet2 size={22} />,
       color: 'danger',
       bg: styles.bgLightDanger,
     },
     {
+      type: 'money',
       title: 'Số dư ATM',
-      value: formatVND(userDT?.atm?.$numberDecimal),
+      value: formatMoney(userDT?.atm?.$numberDecimal),
       icon: <BsGift size={22} />,
       color: 'warning',
       bg: styles.bgLightWarning,
@@ -80,7 +76,9 @@ function DashboardMember() {
                       </div>
                       <div className="overflow-hidden">
                         <p className="text-muted small fw-medium mb-1">{item.title}</p>
-                        <h6 className="fw-bold text-truncate mb-0">{item.value}</h6>
+                        <h6 className="fw-bold text-truncate mb-0">
+                          {item.value} {item.type === 'money' ? <sup>đ</sup> : null}
+                        </h6>
                       </div>
                     </Card.Body>
                   </Card>

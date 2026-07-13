@@ -13,5 +13,12 @@ const buyAccount = async (id, productId, method) => {
     throw error.response.data;
   }
 };
-const getHistory = async (userId) => {};
-export { buyAccount, getHistory };
+const getHistoryBuy = async (userId) => {
+  try {
+    const res = await api.get(`/buy/getAll/${userId}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export { buyAccount, getHistoryBuy };

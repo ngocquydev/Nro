@@ -1,79 +1,65 @@
+import { formatRelativeTime } from '@/util/formatTime';
+import LoadingCommon from '@components/common/LoadingCommon/LoadingCommon';
+import { BuyAccountContext } from '@contexts/BuyAccountProvider';
+import { formatDate } from 'date-fns';
+import { useContext } from 'react';
 import { Card, Table, Badge } from 'react-bootstrap';
 
 function Purchase() {
-    const data = [
-        {
-            id: 1,
-            nick: 'Nick Ngọc Rồng VIP',
-            price: 500000,
-            date: '16/02/2026',
-            status: 'success',
-        },
-        {
-            id: 2,
-            nick: 'Nick Đệ Tử Siêu Cấp',
-            price: 350000,
-            date: '14/02/2026',
-            status: 'pending',
-        },
-        {
-            id: 3,
-            nick: 'Nick Full Set Thần',
-            price: 800000,
-            date: '10/02/2026',
-            status: 'cancel',
-        },
-    ];
+  const { listHistoryBuy, loading } = useContext(BuyAccountContext);
 
-    const renderStatus = status => {
-        switch (status) {
-            case 'success':
-                return <Badge bg='success'>Thành công</Badge>;
-            case 'pending':
-                return <Badge bg='warning'>Đang xử lý</Badge>;
-            case 'cancel':
-                return <Badge bg='danger'>Đã hủy</Badge>;
-            default:
-                return null;
-        }
-    };
-
-    return (
-        <Card className='shadow-sm'>
-            <Card.Body>
-                <h4 className='mb-4'>Lịch sử mua nick</h4>
-                <strong className='text-danger d-block mb-2'>
-                    Vui lòng đổi mật khẩu và lưu lại lịch sử ngay sau khi mua.
-                </strong>
-                <div className='table-responsive'>
-                    <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Tên nick</th>
-                                <th>Giá</th>
-                                <th>Ngày mua</th>
-                                <th>Trạng thái</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.map((item, index) => (
-                                <tr key={item.id}>
-                                    <td>{index + 1}</td>
-                                    <td>{item.nick}</td>
-                                    <td className='text-danger fw-bold'>
-                                        {item.price.toLocaleString()}đ
-                                    </td>
-                                    <td>{item.date}</td>
-                                    <td>{renderStatus(item.status)}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </div>
-            </Card.Body>
-        </Card>
-    );
+  return (
+    <Card className="shadow-sm">
+      <Card.Body>
+        <h4 className="mb-4">Lịch sử mua nick</h4>
+        <strong className="text-danger d-block mb-2">
+          Vui lòng đổi mật khẩu và lưu lại lịch sử ngay sau khi mua.
+        </strong>
+        <div className="table-responsive">
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Mã Nick</th>
+                <th>Tài khoản</th>
+                <th>Mật khẩu</th>
+                <th>Giờ</th>
+                <th>Phương Thức</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="5" className="text-center">
+                    <div className="d-flex justify-content-center p-4">
+                      <LoadingCommon loading={loading} />
+                    </div>
+                  </td>
+                </tr>
+              ) : Array.isArray(listHistoryBuy) && listHistoryBuy.length > 0 ? (
+                listHistoryBuy.map((it, index) => (
+                  <tr key={index + 1}>
+                    <td>{it?.productId}</td>
+                    <td>{it?.productInfo?.accountData?.username}</td>
+                    <td className="text-danger fw-bold">
+                      {it?.productInfo?.accountData?.password}
+                    </td>
+                    <td>{formatRelativeTime(it?.createdAt)}</td>
+                    <td>{it?.paymentMethod}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center">
+                    Chưa có lịch sử giao dịch
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </div>
+      </Card.Body>
+    </Card>
+  );
 }
 
 export default Purchase;

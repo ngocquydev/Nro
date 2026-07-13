@@ -4,11 +4,12 @@ import Login from '@page/Login.jsx';
 import Register from '@page/Register';
 import NapCard from '@page/Transaction/NapCard';
 import PageATM from '@page/Transaction/PageATM';
-import Blogs from '@page/Blogs';
+import Blogs from '@page/TinTuc/Blogs';
 import MemberLayout from '@page/member/MemberLayout';
 import PackNickNgocRongVip from '@page/PackNickNgocRongVip';
 import Detail from '@page/Detail/Detail';
 import TinTucGameNro from '@page/TinTuc/TinTucGameNro';
+import DetailBlogs from '@page/TinTuc/DetailBlogs';
 const routes = [
   {
     path: '/',
@@ -66,6 +67,10 @@ const routes = [
   {
     path: '/category/tin-tuc-game-ngoc-rong',
     element: <TinTucGameNro />,
+  },
+  {
+    path: '/blogs/details',
+    element: <DetailBlogs />,
   },
   {
     path: '/test',

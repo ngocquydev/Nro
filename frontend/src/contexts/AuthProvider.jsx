@@ -174,9 +174,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
   useEffect(() => {
+    setLoadingUser(true);
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        setLoadingUser(true);
         try {
           const res = await getUser();
           setUserDT(res.data?.data);
@@ -192,7 +192,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     return () => unsubscribe();
-  }, [localtion]);
+  }, []);
   const value = {
     authRegisterUser,
     loading,

@@ -3,7 +3,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { getAllCategory } from '@/_config/api/category/category';
 import { getAllProducts } from '@/_config/api/product/product';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import { BuyAccountContext } from './BuyAccountProvider';
 export const ProductsContext = createContext(null);
 
 export const ProductsProvider = ({ children }) => {
@@ -13,9 +12,7 @@ export const ProductsProvider = ({ children }) => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const [loadingHome, setLoadingHome] = useState(false);
-  const { idBuy } = useContext(BuyAccountContext);
   useEffect(() => {
-    if (location.pathname !== '/') return;
     setLoadingHome(true);
     getAllCategory()
       .then((res) => {
@@ -26,7 +23,7 @@ export const ProductsProvider = ({ children }) => {
         console.error(err);
         setLoadingHome(false);
       });
-  }, [location.pathname]);
+  }, []);
 
   useEffect(() => {
     const page = parseInt(searchParams.get('page')) || 1;

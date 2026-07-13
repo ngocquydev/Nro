@@ -1,15 +1,24 @@
-import api from "../axios";
-const getAllBlogs = async (page = 1, limit = 5) => {
+import api from '../axios';
+const getAll = async (category = '', lastId, limit = 6) => {
   try {
-    const res = await api.get("/blogs/getAllBlogs", {
+    const res = await api.get('/blogs/getAll', {
       params: {
-        page,
+        category,
+        lastId,
         limit,
       },
     });
     return res.data;
   } catch (error) {
-    console.error("lỗi", error);
+    console.error('lỗi', error);
   }
 };
-export { getAllBlogs };
+const getBlogsId = async (id) => {
+  try {
+    const res = await api.get(`/blogs/getId/${id}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export { getAll, getBlogsId };

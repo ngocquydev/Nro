@@ -40,7 +40,7 @@ const productSchema = new mongoose.Schema(
     },
   },
   {
-    _id: false, // Tắt _id tự động của Mongoose
+    _id: false,
     timestamps: true,
     toJSON: { getters: true },
     toObject: { getters: true },

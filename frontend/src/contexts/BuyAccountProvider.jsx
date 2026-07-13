@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { ToastMessgeContext } from './ToastMessgeProvider';
-import { buyAccount } from '@config/api/buy/buy';
+import { buyAccount, getHistoryBuy } from '@config/api/buy/buy';
+import { AuthContext } from './AuthProvider';
 
 export const BuyAccountContext = createContext(null);
 
@@ -10,7 +11,8 @@ export const BuyAccountProvider = ({ children }) => {
   const [account, setAccount] = useState(null);
   const [loading, setLoading] = useState(false);
   const { toast } = useContext(ToastMessgeContext);
-
+  const { userDT } = useContext(AuthContext);
+  const [listHistoryBuy, setlistHistoryBuy] = useState([]);
   const onConfirm = async (id, productId, method) => {
     setLoading(true);
     try {
@@ -29,7 +31,18 @@ export const BuyAccountProvider = ({ children }) => {
       setLoading(false);
     }
   };
-
+  useEffect(() => {
+    setLoading(true);
+    if (!userDT || !userDT._id) {
+      return;
+    }
+    getHistoryBuy(userDT._id)
+      .then((res) => {
+        setlistHistoryBuy(res.data.list);
+      })
+      .catch((err) => console.error('lỗi', err))
+      .finally(() => setLoading(false));
+  }, [userDT._id, idBuy]);
   const value = {
     step,
     setStep,
@@ -38,6 +51,7 @@ export const BuyAccountProvider = ({ children }) => {
     loading,
     onConfirm,
     idBuy,
+    listHistoryBuy,
   };
 
   return <BuyAccountContext.Provider value={value}>{children}</BuyAccountContext.Provider>;
