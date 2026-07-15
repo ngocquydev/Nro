@@ -29,7 +29,7 @@ function UserSuccess() {
 
         <hr />
 
-        <div className="ps-3" id={hiStory}>
+        <div className="ps-3" id={hiStory} onClick={() => nagavigator('/member/transaction/atm')}>
           Lịch sử nạp
         </div>
 

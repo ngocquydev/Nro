@@ -46,7 +46,7 @@ function Detail() {
       <div>
         <Breadcrumbs
           title={
-            <div className="fs-4 mt-3" style={{ minWidth: '300px' }}>
+            <div className="fs-4 mt-3" style={{ minWidth: '150px' }}>
               <div className="fw-bold mb-2">ACC nro #{data?._id}</div>
               <div className="mb-3">
                 <span className="text-success fw-bold">
@@ -55,11 +55,8 @@ function Detail() {
                 </span>
               </div>
               <div className="d-flex">
-                <Button variant="danger" className="fw-bold w-50 py-2 shadow-sm">
+                <Button variant="danger" className="fw-bold w-100 py-2 shadow-sm">
                   Mua ngay
-                </Button>
-                <Button variant="primary" className="fw-bold ms-2 w-50 py-2 shadow-sm">
-                  Trả góp
                 </Button>
               </div>
             </div>

@@ -15,9 +15,6 @@ function ItemsGame({ src, title, card, atm, planed, server, category, id, handle
             <div className={boxBtn}>
               <Button text={'Mua Ngay'} isBg={false} onClick={handleOpenModal} />
             </div>
-            <div className={boxBtn}>
-              <BootstrapBtn variant="primary">Đặt cọc</BootstrapBtn>
-            </div>
           </div>
           <div className={idItem}>ACC #{id}</div>
         </div>
