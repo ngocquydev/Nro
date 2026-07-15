@@ -40,7 +40,7 @@ function Products({ data, categoryTitle }) {
               </h6>
 
               <div className={subContent}>
-                {categoryTitle === 'BÁN ẠC NGỌC RỒNG' ? (
+                {categoryTitle === 'Bán ACC Ngọc Rồng' ? (
                   it.quantitySold !== undefined ? (
                     `Số tài khoản: ${it.quantitySold}`
                   ) : (

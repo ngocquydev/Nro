@@ -24,7 +24,6 @@ const validateProducts = [
   body('img').trim().notEmpty().withMessage('Trường "img" không được để trống'),
   body('desc').trim().notEmpty().withMessage('Mô tả không được để trống'),
   body('ATM').trim().notEmpty().withMessage('Thông tin ATM không được để trống'),
-  body('Card').trim().notEmpty().withMessage('Thông tin Card không được để trống'),
 
   body('categoryId')
     .trim()

@@ -101,7 +101,7 @@ function DetailBlogs() {
               details?.desc
             )
           ) : (
-            <Skeleton count={5} /> // Hiển thị 5 dòng Skeleton
+            <Skeleton count={5} />
           )}
         </div>
 
@@ -109,7 +109,9 @@ function DetailBlogs() {
         <Button
           variant="outline-secondary"
           className="rounded-pill px-4"
-          onClick={() => navigate(`/${details?.category}`)}
+          onClick={() =>
+            navigate(`/blogs/${details?.category === 'blogs' ? '' : details?.category}`)
+          }
           disabled={!details}
         >
           {details ? '← Quay lại trang Blogs' : <Skeleton width={100} />}

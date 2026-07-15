@@ -5,7 +5,6 @@ import Footer from '@components/layout/Footer/Footer';
 import { ToastMessgeProvider } from '@contexts/ToastMessgeProvider.jsx';
 import { AuthProvider } from '@contexts/AuthProvider.jsx';
 import { ProductsProvider } from '@contexts/ProductsProvider.jsx';
-import { RechagresProvider } from '@contexts/RechagresProvider.jsx';
 import { AtmPaymentProvider } from '@contexts/AtmPaymentProvider.jsx';
 import { BuyAccountProvider } from '@contexts/BuyAccountProvider.jsx';
 function App() {
@@ -15,24 +14,22 @@ function App() {
         <BuyAccountProvider>
           <ProductsProvider>
             <AtmPaymentProvider>
-              <RechagresProvider>
-                <Routes>
-                  {/* USER ROUTES */}
-                  {routes.map((route, index) => (
-                    <Route
-                      key={index}
-                      path={route.path}
-                      element={
-                        <>
-                          <Header />
-                          {route.element}
-                          <Footer />
-                        </>
-                      }
-                    />
-                  ))}
-                </Routes>
-              </RechagresProvider>
+              <Routes>
+                {/* USER ROUTES */}
+                {routes.map((route, index) => (
+                  <Route
+                    key={index}
+                    path={route.path}
+                    element={
+                      <>
+                        <Header />
+                        {route.element}
+                        <Footer />
+                      </>
+                    }
+                  />
+                ))}
+              </Routes>
             </AtmPaymentProvider>
           </ProductsProvider>
         </BuyAccountProvider>

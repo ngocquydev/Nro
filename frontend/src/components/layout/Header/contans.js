@@ -1,55 +1,51 @@
 const MenuHeader = [
   {
-    name: "Trang chủ",
-    link: "/",
+    name: 'Trang chủ',
+    link: '/',
   },
   {
-    name: "Nạp Tiền",
+    name: 'Nạp Tiền',
     submenu: true,
-    icon: "BsChevronDown",
-    link: "#",
+    icon: 'BsChevronDown',
+    link: '#',
     subMenu: [
       {
-        name: "Nạp qua thẻ điện thoại",
-        link: "/nap-card",
-      },
-      {
-        name: "Nạp qua ATM Tặng 15%",
-        link: "/nap-atm",
+        name: 'Nạp qua ATM Tặng 15%',
+        link: '/nap-atm',
       },
     ],
   },
   {
-    name: "Hướng dẫn",
-    link: "/blogs",
+    name: 'Hướng dẫn',
+    link: '/blogs',
   },
   {
-    name: "Tin Tức",
+    name: 'Tin Tức',
     submenu: true,
-    link: "#",
+    link: '#',
     subMenu: [
       {
-        name: "Tin Tức Game Ngọc Rồng",
-        link: "/category/tin-tuc-game-ngoc-rong",
+        name: 'Tin Tức Game Ngọc Rồng',
+        link: '/blogs/tin-tuc-game-ngoc-rong',
       },
       {
-        name: "Tin Tức Game Free Fire",
-        link: "#",
+        name: 'Tin Tức Game Free Fire',
+        link: '/blogs/tin-tuc-game-free-fire',
       },
       {
-        name: "Tin Tức Game Liên Quân",
-        link: "#",
+        name: 'Tin Tức Game Liên Quân',
+        link: '/blogs/tin-tuc-game-lien-quan',
       },
     ],
   },
   {
-    name: "Hỗ Trợ",
-    link: "#",
+    name: 'Hỗ Trợ',
+    link: '#',
   },
   {
-    name: "Đăng Nhập",
+    name: 'Đăng Nhập',
     right: true,
-    link: "/login",
+    link: '/login',
   },
 ];
 export default MenuHeader;

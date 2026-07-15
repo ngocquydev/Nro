@@ -27,16 +27,14 @@ const buyAccountService = async (userId, productId, paymentMethod) => {
         success: false,
         message: 'Tài khoản đã được mua',
       };
-    if (paymentMethod !== 'ATM' && paymentMethod !== 'Card')
+    if (paymentMethod !== 'ATM')
       return {
         success: false,
         message: 'Phương thức không hợp lệ',
       };
 
-    // Xác định số tiền cần trừ
-    const isATM = paymentMethod === 'ATM';
-    const priceToPay = isATM ? Number(product.ATM) : Number(product.Card);
-    const currentBalance = isATM ? Number(user.atm) : Number(user.card);
+    const priceToPay = Number(product.ATM);
+    const currentBalance = Number(user.atm);
 
     if (currentBalance < priceToPay) {
       return {
@@ -46,7 +44,7 @@ const buyAccountService = async (userId, productId, paymentMethod) => {
     }
 
     // Trừ tiền: Dùng $inc với số âm
-    const updateField = isATM ? { atm: -priceToPay } : { card: -priceToPay };
+    const updateField = { atm: -priceToPay };
     const updateRes = await UserModel.updateOne(
       { _id: userId },
       { $inc: updateField },
@@ -90,11 +88,19 @@ const buyAccountService = async (userId, productId, paymentMethod) => {
     session.endSession();
   }
 };
-const getHistoryService = async (userId) => {
+const getHistoryService = async (userId, page = 1, limit = 6) => {
   try {
-    const list = await HistoryBuyModel.find({ userId: userId }).sort({ createdAt: -1 });
+    const skip = (page - 1) * limit;
+
+    const totalItems = await HistoryBuyModel.countDocuments({ userId: userId });
+
+    const list = await HistoryBuyModel.find({ userId: userId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
     if (!list || list.length === 0) {
-      return { message: 'Not found' };
+      return { list: [], totalPages: 0, currentPage: page };
     }
 
     const processedList = list.map((item) => {
@@ -112,7 +118,13 @@ const getHistoryService = async (userId) => {
         price: obj.price?.$numberDecimal,
       };
     });
-    return { list: processedList };
+
+    return {
+      list: processedList,
+      totalItems,
+      totalPages: Math.ceil(totalItems / limit),
+      currentPage: Number(page),
+    };
   } catch (error) {
     throw error;
   }

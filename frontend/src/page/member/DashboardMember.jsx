@@ -30,17 +30,10 @@ function DashboardMember() {
       color: 'info',
       bg: styles.bgLightInfo,
     },
+
     {
       type: 'money',
-      title: 'Số dư Card',
-      value: formatMoney(userDT?.card?.$numberDecimal),
-      icon: <BsWallet2 size={22} />,
-      color: 'danger',
-      bg: styles.bgLightDanger,
-    },
-    {
-      type: 'money',
-      title: 'Số dư ATM',
+      title: 'Số dư',
       value: formatMoney(userDT?.atm?.$numberDecimal),
       icon: <BsGift size={22} />,
       color: 'warning',

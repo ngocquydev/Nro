@@ -42,13 +42,7 @@ function ItemsGame({ src, title, card, atm, planed, server, category, id, handle
           {/* Giá */}
           <div className="text-center">
             <strong className="text-success mb-2">
-              ATM {atm} <sup>đ</sup>
-            </strong>
-          </div>
-
-          <div className="text-center">
-            <strong className="text-danger">
-              Card {card} <sup>đ</sup>
+              Giá {atm} <sup>đ</sup>
             </strong>
           </div>
         </div>

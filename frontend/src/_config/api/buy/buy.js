@@ -13,9 +13,15 @@ const buyAccount = async (id, productId, method) => {
     throw error.response.data;
   }
 };
-const getHistoryBuy = async (userId) => {
+const getHistoryBuy = async (userId, page, limit = 6) => {
   try {
-    const res = await api.get(`/buy/getAll/${userId}`);
+    const res = await api.get(`/buy/getAll`, {
+      params: {
+        userId: userId,
+        page: page,
+        limit: limit,
+      },
+    });
     return res.data;
   } catch (error) {
     throw error;

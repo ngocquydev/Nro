@@ -40,7 +40,7 @@ const create = async (req, res) => {
 const getDetails = async (req, res) => {
   try {
     const { id } = req.params;
-
+    
     const data = await BlogsService.getById(id);
 
     if (!data) {

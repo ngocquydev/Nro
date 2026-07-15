@@ -6,11 +6,12 @@ import formatMoney from '@/util/formatMoney';
 import { AuthContext } from '@contexts/AuthProvider';
 import Alert from 'react-bootstrap/Alert';
 import { BuyAccountContext } from '@contexts/BuyAccountProvider';
+import { useNavigate } from 'react-router-dom';
 function ModalBuy({ show, handleClose, DT }) {
   const { userDT } = useContext(AuthContext);
   const modalRef = useRef(null);
-  const [countdown, setCountdown] = useState(5);
   const [paymentMethod, setPaymentMethod] = useState('ATM');
+  const navigator = useNavigate();
   const { setAccount, account, loading, step, setStep, onConfirm } = useContext(BuyAccountContext);
   const handlePurchase = async () => {
     const res = await onConfirm(userDT?._id, DT?._id, paymentMethod);
@@ -20,21 +21,9 @@ function ModalBuy({ show, handleClose, DT }) {
   };
   const handleCloseModal = () => {
     setStep(1);
+    setAccount(null);
     handleClose();
   };
-  useEffect(() => {
-    let timer;
-    if (account !== null && countdown > 0) {
-      timer = setInterval(() => {
-        setCountdown((prev) => prev - 1);
-      }, 1000);
-    } else if (countdown === 0 && account !== null) {
-      setAccount(null);
-      handleCloseModal();
-    }
-
-    return () => clearInterval(timer);
-  }, [account, countdown]);
 
   return (
     <Modal ref={modalRef} show={show} onHide={handleCloseModal} centered size="md">
@@ -48,10 +37,7 @@ function ModalBuy({ show, handleClose, DT }) {
       <Modal.Body className="px-4 py-3">
         {account != null ? (
           <Alert variant="success">
-            <Alert.Heading>Tài khoản đã mua!</Alert.Heading>
-            <p>
-              Thông tin tài khoản sẽ tự đóng sau <strong>{countdown} giây</strong>.
-            </p>
+            <Alert.Heading>Tài khoản mua được đưa vào lịch sử!</Alert.Heading>
             <hr />
             <p className="text-danger fw-bold">Tài khoản: {account.Username}</p>
             <p className="text-danger fw-bold">Mật khẩu: {account.Password}</p>
@@ -79,14 +65,6 @@ function ModalBuy({ show, handleClose, DT }) {
                   </span>
                 </td>
               </tr>
-              <tr>
-                <td className="fw-bold bg-light text-warning">Giá Thẻ (Card)</td>
-                <td>
-                  <span className="fw-bold text-warning">
-                    {formatMoney(DT.Card?.$numberDecimal)} đ
-                  </span>
-                </td>
-              </tr>
             </tbody>
           </Table>
         ) : (
@@ -100,17 +78,6 @@ function ModalBuy({ show, handleClose, DT }) {
                 name="paymentMethod"
                 value="ATM"
                 checked={paymentMethod === 'ATM'}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
-            </div>
-            <div className="rounded border p-3">
-              <Form.Check
-                type="radio"
-                id="card-radio"
-                label={`Thanh toán qua Thẻ cào (${formatMoney(DT.Card?.$numberDecimal)}đ)`}
-                name="paymentMethod"
-                value="Card"
-                checked={paymentMethod === 'Card'}
                 onChange={(e) => setPaymentMethod(e.target.value)}
               />
             </div>

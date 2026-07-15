@@ -1,8 +1,6 @@
 import Home from '@page/Home.jsx';
-import Test from '@page/Test.jsx';
 import Login from '@page/Login.jsx';
 import Register from '@page/Register';
-import NapCard from '@page/Transaction/NapCard';
 import PageATM from '@page/Transaction/PageATM';
 import Blogs from '@page/TinTuc/Blogs';
 import MemberLayout from '@page/member/MemberLayout';
@@ -10,6 +8,8 @@ import PackNickNgocRongVip from '@page/PackNickNgocRongVip';
 import Detail from '@page/Detail/Detail';
 import TinTucGameNro from '@page/TinTuc/TinTucGameNro';
 import DetailBlogs from '@page/TinTuc/DetailBlogs';
+import TinTucGameFF from '@page/TinTuc/TinTucGameFF';
+import TinTucGameLq from '@page/TinTuc/TinTucGameLq';
 const routes = [
   {
     path: '/',
@@ -23,10 +23,7 @@ const routes = [
     path: '/register',
     element: <Register />,
   },
-  {
-    path: '/nap-card',
-    element: <NapCard />,
-  },
+
   {
     path: '/nap-atm',
     element: <PageATM />,
@@ -45,10 +42,6 @@ const routes = [
   },
 
   {
-    path: '/member/transaction/card',
-    element: <MemberLayout />,
-  },
-  {
     path: '/member/transaction/atm',
     element: <MemberLayout />,
   },
@@ -65,7 +58,7 @@ const routes = [
     element: <Detail />,
   },
   {
-    path: '/category/tin-tuc-game-ngoc-rong',
+    path: '/blogs/tin-tuc-game-ngoc-rong',
     element: <TinTucGameNro />,
   },
   {
@@ -73,8 +66,12 @@ const routes = [
     element: <DetailBlogs />,
   },
   {
-    path: '/test',
-    element: <Test />,
+    path: '/blogs/tin-tuc-game-free-fire',
+    element: <TinTucGameFF />,
+  },
+  {
+    path: '/blogs/tin-tuc-game-lien-quan',
+    element: <TinTucGameLq />,
   },
 ];
 export { routes };

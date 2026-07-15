@@ -64,7 +64,8 @@ async function startServer() {
         // 3. Xử lý song song bằng Promise.all (Nhanh hơn nhiều so với vòng lặp)
         await Promise.all(
           activeOrders.map(async (order) => {
-            const valueAsNumber = parseFloat(order.amount.toString());
+            const valueAsNumber = Number(order.amount.toString());
+            const cleanAmount = Math.round(valueAsNumber * 100) / 100;
             try {
               const transaction = await getTransactionDetails(order.id);
               if (transaction) {
@@ -72,7 +73,7 @@ async function startServer() {
                 order.status = 1;
                 await order.save();
 
-                await User.updateOne({ _id: order.userId }, { $inc: { atm: valueAsNumber } });
+                await User.updateOne({ _id: order.userId }, { $inc: { atm: cleanAmount } });
               }
             } catch (innerErr) {
               console.error(`Lỗi xử lý nạp thẻ ${order._id}:`, innerErr);

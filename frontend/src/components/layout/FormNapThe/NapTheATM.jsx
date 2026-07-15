@@ -1,6 +1,5 @@
 import { Container, Button, Form, InputGroup, Card, Badge } from 'react-bootstrap';
 import styles from './styles.module.css';
-import HistoryNapThe from '../HistoryNapThe/HistoryNapThe';
 import Breadcrumbs from '@components/common/Breadcrumbs/Breadcrumbs';
 import Table from 'react-bootstrap/Table';
 import CopyButton from '@components/common/CopyButton/CopyButton';
@@ -44,7 +43,7 @@ function NapTheATM() {
       <Container className="py-5">
         <Breadcrumbs title={'Nạp ATM'} desc={'Nạp ATM'} />
         <div
-          className={`${wrapPer}`}
+          className={wrapPer}
           style={{
             boxShadow: '0 0 10px rgba(0,0,0,0.3)',
             padding: '18px 18px 48px',

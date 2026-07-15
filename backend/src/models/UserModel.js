@@ -6,10 +6,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true },
     isDeleted: { type: Boolean, default: false },
-    card: {
-      type: mongoose.Schema.Types.Decimal128,
-      default: 0,
-    },
+
     atm: {
       type: mongoose.Schema.Types.Decimal128,
       default: 0,

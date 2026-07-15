@@ -1,9 +1,8 @@
-import { BsGrid, BsKey, BsCashStack, BsClockHistory, BsCartCheck } from 'react-icons/bs';
+import { BsGrid, BsKey, BsClockHistory, BsCartCheck } from 'react-icons/bs';
 import { Card, Col, Row, Nav, Container } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ChangePassword from './ChangePassword';
 import styles from './styles.module.css';
-import Transaction from './Transaction';
 import Purchase from './Purchase';
 import DashboardMember from './DashboardMember';
 import Breadcrumbs from '@components/common/Breadcrumbs/Breadcrumbs';
@@ -37,8 +36,6 @@ function MemberLayout() {
         return <DashboardMember />;
       case '/member/password':
         return <ChangePassword />;
-      case '/member/transaction/card':
-        return <Transaction />;
       case '/member/transaction/atm':
         return <HistoryNapATM />;
       case '/member/purchase':
@@ -91,22 +88,6 @@ function MemberLayout() {
                   Đổi Mật Khẩu
                 </Nav.Link>
 
-                <Nav.Link
-                  as={Link}
-                  to="/member/transaction/card"
-                  active={location.pathname === '/member/transaction/card'}
-                  style={
-                    location.pathname === '/member/transaction/card'
-                      ? {
-                          backgroundColor: 'red',
-                          color: '#fff',
-                        }
-                      : null
-                  }
-                >
-                  <BsClockHistory className="me-2" />
-                  Lịch Sử Nạp Tiền Card
-                </Nav.Link>
                 <Nav.Link
                   as={Link}
                   to="/member/transaction/atm"

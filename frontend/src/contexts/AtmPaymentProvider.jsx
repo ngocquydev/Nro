@@ -12,29 +12,34 @@ export const AtmPaymentProvider = ({ children }) => {
   const { userDT } = useContext(AuthContext);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingButton, setLoadingButton] = useState(false);
   const location = useLocation();
   const depositSchema = Yup.object().shape({
     amount: Yup.number()
       .typeError('Số tiền phải là một con số')
       .required('Vui lòng nhập số tiền')
-      .min(1, 'Số tiền phải lớn hơn 0')
+      .min(10000, 'Số tiền phải lớn hơn 10k')
       .max(10000000, 'Số tiền không được quá 10 triệu VNĐ'),
   });
   const formik = useFormik({
     initialValues: { amount: '', desc: '' },
     validationSchema: depositSchema,
     onSubmit: async (values) => {
+      setLoading(true);
       try {
         const desc = `NAP${userDT?._id}`;
         const qrCodeData = await getQrCode(values.amount, desc);
         setUrl(qrCodeData.data);
+        setLoadingButton(false);
       } catch (error) {
         console.error('Error fetching QR code:', error);
+        setLoadingButton(false);
       }
     },
   });
   useEffect(() => {
-    if (!userDT._id) return;
+    setUrl(null);
+    if (!userDT?._id) return;
     setLoading(true);
     const fetchData = async () => {
       try {
@@ -51,6 +56,6 @@ export const AtmPaymentProvider = ({ children }) => {
     }
   }, [userDT?._id, location]);
 
-  const value = { formik, url, setUrl, data, loading };
+  const value = { formik, url, setUrl, data, loading, loadingButton };
   return <AtmPaymentContext.Provider value={value}>{children}</AtmPaymentContext.Provider>;
 };

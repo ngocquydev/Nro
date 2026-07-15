@@ -27,12 +27,7 @@ const productSchema = new mongoose.Schema(
       get: (v) => (v ? v.toString() : '0'),
       default: mongoose.Types.Decimal128.fromString('0'),
     },
-    Card: {
-      type: mongoose.Types.Decimal128,
-      required: true,
-      get: (v) => (v ? v.toString() : '0'),
-      default: mongoose.Types.Decimal128.fromString('0'),
-    },
+
     slug: {
       type: String,
       ref: 'Category',

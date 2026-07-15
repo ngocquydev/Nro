@@ -16,8 +16,6 @@ const HistoryBuySchema = new mongoose.Schema(
       required: true,
     },
 
-    // 3. Thông tin chi tiết của nick TẠI THỜI ĐIỂM MUA
-    // (Phải lưu trực tiếp vào đây, phòng trường hợp sản phẩm gốc bị xóa hoặc sửa)
     productInfo: {
       accountData: {
         username: { type: String, required: true },

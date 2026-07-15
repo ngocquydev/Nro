@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { ToastMessgeContext } from './ToastMessgeProvider';
 import { buyAccount, getHistoryBuy } from '@config/api/buy/buy';
 import { AuthContext } from './AuthProvider';
+import { useSearchParams } from 'react-router-dom';
 
 export const BuyAccountContext = createContext(null);
 
@@ -12,8 +13,13 @@ export const BuyAccountProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useContext(ToastMessgeContext);
   const { userDT } = useContext(AuthContext);
+  const [searchParams] = useSearchParams();
   const [listHistoryBuy, setlistHistoryBuy] = useState([]);
   const onConfirm = async (id, productId, method) => {
+    if (!id) {
+      toast.error('Bạn chưa đăng nhập');
+      return;
+    }
     setLoading(true);
     try {
       const res = await buyAccount(id, productId, method);
@@ -32,17 +38,16 @@ export const BuyAccountProvider = ({ children }) => {
     }
   };
   useEffect(() => {
+    if (!userDT?._id) return;
+    const page = searchParams.get('page') || 1;
     setLoading(true);
-    if (!userDT || !userDT._id) {
-      return;
-    }
-    getHistoryBuy(userDT._id)
+    getHistoryBuy(userDT._id, page)
       .then((res) => {
-        setlistHistoryBuy(res.data.list);
+        setlistHistoryBuy(res.list || res.data);
       })
       .catch((err) => console.error('lỗi', err))
       .finally(() => setLoading(false));
-  }, [userDT._id, idBuy]);
+  }, [userDT?._id, idBuy, searchParams]);
   const value = {
     step,
     setStep,

@@ -46,22 +46,22 @@ function Detail() {
       <div>
         <Breadcrumbs
           title={
-            <div className="fs-4 mt-3">
+            <div className="fs-4 mt-3" style={{ minWidth: '300px' }}>
               <div className="fw-bold mb-2">ACC nro #{data?._id}</div>
               <div className="mb-3">
-                <span className="text-danger fw-bold me-2">
-                  CARD : {formatMoney(getPrice(data?.Card))}
-                  <sup>đ</sup>
-                </span>
-                <span className="text-muted">|</span>
-                <span className="text-success fw-bold ms-2">
-                  ATM : {formatMoney(getPrice(data?.ATM))}
+                <span className="text-success fw-bold">
+                  Giá : {formatMoney(getPrice(data?.ATM))}
                   <sup>đ</sup>
                 </span>
               </div>
-              <Button variant="danger" className="fw-bold w-50 py-2 shadow-sm">
-                MUA NGAY
-              </Button>
+              <div className="d-flex">
+                <Button variant="danger" className="fw-bold w-50 py-2 shadow-sm">
+                  Mua ngay
+                </Button>
+                <Button variant="primary" className="fw-bold ms-2 w-50 py-2 shadow-sm">
+                  Trả góp
+                </Button>
+              </div>
             </div>
           }
           desc={`#${data?._id}`}

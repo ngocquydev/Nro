@@ -18,10 +18,11 @@ export const BlogsProvider = ({ children }) => {
     setLastId(null);
   };
   useEffect(() => {
-    if (location.pathname !== '/blogs') return;
-
     setLoading(true);
-    const path = location.pathname.split('/')[1];
+    const path =
+      location.pathname === '/blogs'
+        ? location.pathname.split('/')[1]
+        : location.pathname.split('/')[2];
     getAll(path, lastId, 6)
       .then((res) => {
         setData((prev) => {
@@ -31,7 +32,6 @@ export const BlogsProvider = ({ children }) => {
             items: [...prev.items, ...res.data.items],
           };
         });
-        console.log(lastId);
       })
       .catch((err) => console.error('lỗi', err))
       .finally(() => {

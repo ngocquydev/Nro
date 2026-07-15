@@ -1,13 +1,24 @@
 import { formatRelativeTime } from '@/util/formatTime';
 import LoadingCommon from '@components/common/LoadingCommon/LoadingCommon';
+import ReactPaginateCommon from '@components/common/ReactPaginateCommon/ReactPaginateCommon';
 import { BuyAccountContext } from '@contexts/BuyAccountProvider';
 import { formatDate } from 'date-fns';
 import { useContext } from 'react';
-import { Card, Table, Badge } from 'react-bootstrap';
+import { Card, Table, Badge, CardFooter } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 function Purchase() {
   const { listHistoryBuy, loading } = useContext(BuyAccountContext);
-
+  const navigate = useNavigate();
+  const handlePageClick = async (values) => {
+    if (values.selected === undefined || values.selected === null || isNaN(values.selected)) {
+      return;
+    }
+    const newPage = values.selected + 1;
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.set('page', newPage);
+    navigate(`/member/purchase?${currentParams.toString()}`);
+  };
   return (
     <Card className="shadow-sm">
       <Card.Body>
@@ -35,8 +46,8 @@ function Purchase() {
                     </div>
                   </td>
                 </tr>
-              ) : Array.isArray(listHistoryBuy) && listHistoryBuy.length > 0 ? (
-                listHistoryBuy.map((it, index) => (
+              ) : Array.isArray(listHistoryBuy.list) && listHistoryBuy.list.length > 0 ? (
+                listHistoryBuy.list.map((it, index) => (
                   <tr key={index + 1}>
                     <td>{it?.productId}</td>
                     <td>{it?.productInfo?.accountData?.username}</td>
@@ -57,6 +68,15 @@ function Purchase() {
             </tbody>
           </Table>
         </div>
+        <CardFooter>
+          {listHistoryBuy?.totalPages > 1 && (
+            <ReactPaginateCommon
+              pageCount={Math.ceil(Number(listHistoryBuy?.totalPages) || 0)}
+              currentPage={(Number(listHistoryBuy?.currentPage) || 1) - 1}
+              handlePageClick={handlePageClick}
+            />
+          )}
+        </CardFooter>
       </Card.Body>
     </Card>
   );

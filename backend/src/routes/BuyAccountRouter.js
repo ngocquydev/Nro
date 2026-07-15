@@ -6,5 +6,5 @@ const {
 } = require('../controllers/buyAccountController');
 const { verifyRole } = require('../middleware/authMiddleware');
 router.post('/buyAccount', verifyRole('user'), buyAccountController);
-router.get('/getAll/:userId', verifyRole('user'), getHistoryController);
+router.get('/getAll', verifyRole('user'), getHistoryController);
 module.exports = router;

@@ -10,7 +10,6 @@ import { auth } from '@/_config/firebase';
 import UserSuccess from './UserSuccess/UserSuccess';
 import MenuHeader from '@components/layout/Header/contans';
 import { AuthContext } from '@contexts/AuthProvider';
-import { checkRecharges } from '@/_config/api/recharges/recharges';
 
 function Header() {
   const {
@@ -41,23 +40,7 @@ function Header() {
       unsubscribe();
     };
   }, []);
-  useEffect(() => {
-    if (auth.currentUser && userDT?._id) {
-      const intervalId = setInterval(() => {
-        checkRecharges({ userId: userDT._id })
-          .then((res) => {
-            if (res && res.data && res.data.success === false) {
-              clearInterval(intervalId);
-            }
-          })
-          .catch((err) => {
-            console.error('Lỗi khi kiểm tra nạp tiền:', err);
-          });
-      }, 5000);
 
-      return () => clearInterval(intervalId);
-    }
-  }, [auth.currentUser, userDT?._id]);
   return (
     <Container className="p-0">
       <header className={header}>

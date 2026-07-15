@@ -1,19 +1,21 @@
 import Breadcrumbs from '@components/common/Breadcrumbs/Breadcrumbs';
 import ContentBlogs from '@components/layout/Content/ContentBlogs';
-import ItemsBlog from '@components/layout/ItemsBlog/ItemsBlog';
 import { BlogsProvider } from '@contexts/BlogsProvider';
-import { Col, Container, Row } from 'react-bootstrap';
-function TinTucGameNro() {
+import React from 'react';
+import { Container } from 'react-bootstrap';
+
+function TinTucGameLq() {
   return (
     <BlogsProvider>
       <Container>
         <Breadcrumbs
-          title={'Blog - TIN TỨC GAME NGỌC RỒNG'}
-          desc={'Blog - TIN TỨC GAME NGỌC RỒNG'}
+          title={'Blog - TIN TỨC GAME LIÊN QUÂN'}
+          desc={'Blog - TIN TỨC GAME LIÊN QUÂN'}
         />
         <ContentBlogs />
       </Container>
     </BlogsProvider>
   );
 }
-export default TinTucGameNro;
+
+export default TinTucGameLq;

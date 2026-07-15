@@ -22,12 +22,8 @@ function UserSuccess() {
 
       <div className={menuChild}>
         <div className={listTop}>
-          <div>
-            Số dư card: {formatMoney(userDT?.card?.$numberDecimal)} <sup>đ</sup>
-          </div>
-          <div>|</div>
-          <div>
-            Số dư ATM: {formatMoney(userDT?.atm?.$numberDecimal)} <sup>đ</sup>
+          <div className="fw-bold fs-5 text-success">
+            Số dư: {formatMoney(userDT?.atm?.$numberDecimal)} <sup>đ</sup>
           </div>
         </div>
 

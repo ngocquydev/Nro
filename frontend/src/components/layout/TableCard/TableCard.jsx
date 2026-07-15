@@ -1,84 +1,78 @@
-import { Card, Spinner, Button, Form, Tab, Tabs } from 'react-bootstrap';
+import { Card, Button, Form, Tab, Tabs, InputGroup, Table } from 'react-bootstrap';
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { ToastMessgeContext } from '@contexts/ToastMessgeProvider';
 import { AuthContext } from '@contexts/AuthProvider';
 import LoadingCommon from '@components/common/LoadingCommon/LoadingCommon';
-import { RechagresContext } from '@contexts/RechagresProvider';
-import SelectBox from '@components/common/SelectBox/SelectBox';
-import { CARD_TYPES, DENOMINATIONS } from '@components/common/SelectBox/contans/contans';
+import { AtmPaymentContext } from '@contexts/AtmPaymentProvider';
+import styles from './styles.module.scss';
 
 function TableCard() {
-  const { toast } = useContext(ToastMessgeContext);
+  const { customInput } = styles;
   const { userDT, loadingUser } = useContext(AuthContext);
-  const { formik, getData } = useContext(RechagresContext);
+  const { formik, url, loadingButton } = useContext(AtmPaymentContext);
   return (
     <Card className="shadow-sm">
       <Card.Body>
         <Tabs defaultActiveKey="napThe" className="mb-3" fill>
-          <Tab eventKey="napThe" title="Nạp thẻ">
+          <Tab eventKey="napThe" title="Nạp ATM">
             {loadingUser ? (
               <LoadingCommon />
             ) : userDT ? (
-              <Form noValidate onSubmit={formik.handleSubmit} method="formdarta">
-                {/* TELCO */}
-                <Form.Group className="mt-3 mb-3">
-                  {/* Cho Loại thẻ */}
-                  <SelectBox
-                    formik={formik}
-                    data={CARD_TYPES}
-                    name={'telco'}
-                    placeholder="Chọn loại thẻ"
-                  />
-                </Form.Group>
+              <div className="p-3" style={{ boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
+                <h2 className="mb-3 text-center">NẠP QUA ATM TẶNG 15%</h2>
+                <p className="text-danger fw-bold fs-5 text-center">
+                  Vui lòng nhập số tiền muốn nạp
+                </p>
 
-                {/* AMOUNT */}
-                <Form.Group className="mb-3">
-                  <SelectBox formik={formik} data={DENOMINATIONS} name={'monney'} isMoney={true} />
-                </Form.Group>
-
-                {/* SERIAL */}
-                <Form.Group className="mb-3">
-                  <Form.Control
-                    type="text"
-                    name="serial"
-                    placeholder="Nhập số serial"
-                    value={formik.values.serial}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  {formik.touched.serial && formik.errors.serial && (
-                    <div className="text-danger mt-1" style={{ fontSize: '0.875em' }}>
-                      {formik.errors.serial}
-                    </div>
+                <Form onSubmit={formik.handleSubmit}>
+                  <InputGroup className="mb-3">
+                    <InputGroup.Text>Số tiền</InputGroup.Text>
+                    <Form.Control
+                      type="number"
+                      placeholder="Nhập số tiền..."
+                      className={customInput}
+                      {...formik.getFieldProps('amount')}
+                    />
+                    <InputGroup.Text>VNĐ</InputGroup.Text>
+                  </InputGroup>
+                  {formik.touched.amount && formik.errors.amount && (
+                    <div className="text-danger fw-bold mb-2">{formik.errors.amount}</div>
                   )}
-                </Form.Group>
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    className="w-100"
+                    disabled={formik.isSubmitting || loadingButton}
+                  >
+                    {formik.isSubmitting || loadingButton ? (
+                      <>
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                        Đang xử lý...
+                      </>
+                    ) : (
+                      'Tạo lệnh nạp'
+                    )}
+                  </Button>
+                </Form>
 
-                {/* CODE */}
-                <Form.Group className="mb-3">
-                  <Form.Control
-                    type="text"
-                    name="code"
-                    placeholder="Nhập mã thẻ"
-                    value={formik.values.code}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-
-                  {formik.touched.code && formik.errors.code && (
-                    <div className="text-danger mt-1" style={{ fontSize: '0.875em' }}>
-                      {formik.errors.code}
-                    </div>
-                  )}
-                </Form.Group>
-
-                <Button type="submit" className="w-100 py-2">
-                  Nạp thẻ
-                </Button>
-              </Form>
+                {url && (
+                  <div className="my-3 text-center">
+                    <img
+                      src={url}
+                      alt="Mã QR thanh toán"
+                      className="img-fluid"
+                      style={{ maxWidth: '250px' }}
+                    />
+                  </div>
+                )}
+              </div>
             ) : (
               <div className="mt-5 text-center">
-                <h4 className="text-uppercase">
+                <h4>
                   Vui lòng <Link to="/login">Đăng nhập</Link> để sử dụng tính năng này
                 </h4>
               </div>
